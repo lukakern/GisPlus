@@ -1,14 +1,5 @@
 '''
-Spargel Rezept:
-Spargel in Bratolive angebraten
-wenn anfang braun Butter dazu + Muskat + Zucker
-halber brühwurfel mit wasser
-weißwein essig
-So viel Butter wie sonst geschmolzen (1/8 - 1/4)
-Wasser dazu so wie es passt zur flüssigkeit
-Salz & Pfeffer
-
-Spargel in nassem Küchenhandtuch im Kühlschrank aufbewahren
+Hello Hello
 '''
 
 
@@ -55,7 +46,7 @@ for i in range(0, len(geom_x[1, :])):
 
 within_list = []
 
-for i in range(0, len(geometry_coll)):  # all geometries of "vector file" 
+for i in range(0, len(geometry_coll)):  # all geometries of "vector file"
     step = [pixel.within(geometry_coll[i]) for pixel in geom_pixels]
     within_list.append(step)
 
