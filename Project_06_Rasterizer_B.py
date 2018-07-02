@@ -6,11 +6,10 @@ Hello Hello
 import shapely.geometry as spg
 import numpy as np
 import matplotlib.pyplot as plt
-from matplotlib.patches import Polygon as mplPolygon
-import gdal
 
 attributes = [np.random.randint(0, 100) for i in range(0, 3)]
 
+# create random polygon geometry
 np.random.seed(1234)
 geometry_coll = spg.collection.GeometryCollection(
     [spg.MultiPoint(
@@ -18,9 +17,12 @@ geometry_coll = spg.collection.GeometryCollection(
     ).convex_hull for mid in
      ([np.random.randint(0, 100) for i in range(0, 3)])])
 
+# join geometry and their attributes
 geom_attr = list(zip(geometry_coll, attributes))
 
-bbox = geometry_coll.bounds  # cornerstones of bounding box
+
+# cornerstones of bounding box
+bbox = geometry_coll.bounds
 
 # implemented buffer frame around the geometries
 buffer = input(
