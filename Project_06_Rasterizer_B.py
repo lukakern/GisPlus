@@ -85,3 +85,4 @@ within_array = np.array(within_list_sub, dtype='uint8')
 flipped_array = np.flipud(within_array)
 plt.imshow(flipped_array, plt.cm.gray)
 plt.show()
+
