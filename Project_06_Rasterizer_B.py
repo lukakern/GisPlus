@@ -8,7 +8,7 @@ Hello Hello
 import shapely.geometry as spg
 import numpy as np
 import matplotlib.pyplot as plt
-from shapely.wkt import loads
+
 
 
 '''
