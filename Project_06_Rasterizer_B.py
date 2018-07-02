@@ -1,4 +1,5 @@
 
+
 '''
 Hello Hello
 '''
@@ -10,6 +11,9 @@ import matplotlib.pyplot as plt
 
 
 
+'''
+Test Polygon
+'''
 #create random polygon geometry
 np.random.seed(None)
 geometry_coll = spg.collection.GeometryCollection(
@@ -18,6 +22,26 @@ geometry_coll = spg.collection.GeometryCollection(
     ).convex_hull for mid in(
         [np.random.randint(0, 100) for i in range(0, 3)])]
 )
+
+'''
+Test Points
+'''
+#geometry_coll = spg.collection.GeometryCollection(
+#    [spg.MultiPoint(
+#        [spg.Point(_) for _ in np.random.gamma(mid, 3, (15, 2))]
+#    ) for mid in([np.random.randint(0, 100) for i in range(0, 3)])])
+
+
+#point_geom_coll = spg.collection.GeometryCollection([geometry_coll[0][i] for i in range(0, len(geometry_coll[0]))])
+#geometry_coll = point_geom_coll
+
+'''
+Test LineString
+'''
+#geometry_coll =  spg.collection.GeometryCollection([spg.LineString([(0, 0), (20, 20)]),
+#                                                   spg.LineString([(0, 4), (70,30)])])
+
+
 
 # create attribute values for geometries
 attributes = [np.random.randint(0, 255) for i in range(0, len(geometry_coll))]
@@ -43,7 +67,8 @@ y_max = round(bbox_plus_buffer[3])
 
 # create a grid for the geometry bounding box
 resolution = input(
-    "Please enter a value for the resolution (the lower the higher is the resolution): ")
+    "Please enter a value for the resolution \
+    (the lower the higher is the resolution): ")
 geom_y, geom_x = np.mgrid[y_min:y_max:float(resolution),
                  x_min:x_max:float(resolution)]
 
@@ -56,8 +81,18 @@ for i in range(0, len(geom_x[:, 1])):
 # check if the pixel/point lies within one of the geometries (separately)
 within_list = []
 for i in range(0, len(geometry_coll)):
-    step = [pixel.within(geometry_coll[i]) for pixel in geom_pixels]
-    # step = [pixel.within(geometry_coll[i]) for pixel in geom_pixels]
+    if str(type(geometry_coll[i])) == \
+            "<class 'shapely.geometry.polygon.Polygon'>":
+        step = [pixel.within(geometry_coll[i]) for pixel in geom_pixels]
+    if str(type(geometry_coll[i])) == \
+            "<class 'shapely.geometry.point.Point'>":
+        step = [pixel.x == round(geometry_coll[i].x) and
+                pixel.y == round(geometry_coll[i].y)
+                for pixel in geom_pixels]
+    if str(type(geometry_coll[i])) == \
+            "<class 'shapely.geometry.linestring.LineString'>":
+        step = [pixel.within(geometry_coll[i].buffer(float(resolution)))
+                for pixel in geom_pixels]
     within_list.append(step)
 
 len(within_list[0])
