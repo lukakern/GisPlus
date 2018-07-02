@@ -10,7 +10,7 @@ import matplotlib.pyplot as plt
 attributes = [np.random.randint(0, 100) for i in range(0, 3)]
 
 # create random polygon geometry
-np.random.seed(1234)
+np.random.seed(None)
 geometry_coll = spg.collection.GeometryCollection(
     [spg.MultiPoint(
         [spg.Point(_) for _ in np.random.gamma(mid, 3, (15, 2))]
@@ -25,8 +25,7 @@ geom_attr = list(zip(geometry_coll, attributes))
 bbox = geometry_coll.bounds
 
 # implemented buffer frame around the geometries
-buffer = input(
-    "Please enter a buffer value for the minimum bounding box: ")
+buffer = input("Please enter a buffer value for the minimum bounding box: ")
 
 bbox_plus_buffer = []  # implemented buffer
 [bbox_plus_buffer.append(bbox[i] - float(buffer)) for i in (0, 1)]
@@ -42,8 +41,8 @@ geom_y, geom_x = np.mgrid[y_min:y_max, x_min:x_max]
 
 # create a point geometry for every grid cell
 geom_pixels = []
-for i in range(0, len(geom_x[1, :])):
-    for j in range(0, len(geom_x[:, 1])):
+for i in range(0, len(geom_x[:,1])):
+    for j in range(0, len(geom_x[1,:])):
         geom_pixels.append(spg.Point([geom_x[i, j], geom_y[i, j]]))
 
 # check if the pixel/point lies within one of the geometries (separately)
