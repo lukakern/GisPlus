@@ -25,8 +25,7 @@ geom_attr = list(zip(geometry_coll, attributes))
 bbox = geometry_coll.bounds
 
 # implemented buffer frame around the geometries
-buffer = input(
-    "Please enter a buffer value for the minimum bounding box: ")
+buffer = input("Please enter a buffer value for the minimum bounding box: ")
 
 bbox_plus_buffer = []  # implemented buffer
 [bbox_plus_buffer.append(bbox[i] - float(buffer)) for i in (0, 1)]
