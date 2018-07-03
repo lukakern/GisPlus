@@ -1,4 +1,3 @@
-
 '''
 Hello Hello
 '''
@@ -128,4 +127,3 @@ flipped_array = np.flipud(within_array)
 plt.imshow(flipped_array, plt.cm.gray)
 plt.show()
 
-tes))
