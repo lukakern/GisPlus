@@ -40,22 +40,17 @@ geometry_coll_line = spg.collection.GeometryCollection(
      spg.LineString([(44, 60), (2, 99)]),
      spg.LineString([(45, 12), (113, 44)])])
 
-'''
-Test Mixed
-'''
+
 
 # create attribute values for geometries
-attributes_poly = [np.random.randint(0, 255) for i in
-                   range(0, len(geometry_coll_poly))]
-attributes_point = [np.random.randint(0, 255) for i in
-                    range(0, len(geometry_coll_point))]
-attributes_line = [np.random.randint(0, 255) for i in
-                   range(0, len(geometry_coll_line))]
+attributes_poly = [np.random.randint(0, 255)
+                   for i in range(0, len(geometry_coll_poly))]
+attributes_point = [np.random.randint(0, 255)
+                    for i in range(0, len(geometry_coll_point))]
+attributes_line = [np.random.randint(0, 255)
+                   for i in range(0, len(geometry_coll_line))]
 
-# join geometry and their attributes
-geom_attr_poly = list(zip(geometry_coll_poly, attributes_poly))
-geom_attr_point = list(zip(geometry_coll_point, attributes_point))
-geom_attr_line = list(zip(geometry_coll_line, attributes_line))
+
 
 
 path = input("Please enter a path for test files: ")
