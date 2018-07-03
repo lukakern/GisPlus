@@ -40,7 +40,7 @@ def rasterizer(
     # cornerstones of bounding box
     bbox = geometry_coll.bounds
 
-    x_range = round(bbox[0]) - round(bbox[2])
+    x_range = abs(round(bbox[2]) - round(bbox[1]))
     #y_range = round(bbox[3]) - round(bbox[1])
 
     resolution = x_range/pixels
@@ -128,6 +128,6 @@ def rasterizer(
 
 
 #rasterizer()
-rasterizer(filepath="shps/cities.shp",
-           pixels=1000,
+rasterizer(filepath="../shps/cities.shp",
+           pixels=100,
            outputname="cities.tiff")
