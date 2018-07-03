@@ -87,7 +87,7 @@ def rasterizer(
            if within_list[i][j] == 1:
                 within_list[i][j] = 1
            if within_list[i][j] == 0:
-           within_list[i][j] = 0
+                within_list[i][j] = 0
 
 
     # check for geometry attribute
