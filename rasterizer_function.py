@@ -8,12 +8,12 @@ from shapely.geometry import shape
 import skimage as sk
 from skimage import external, io, exposure
 
+
 def rasterizer(
-        filepath = "../../pyCharmTest/venv/data/muenster_stands/stands.shp",
-        buffer = 20,
-        pixels = 1,
-        outputname = "output.tiff"
-    ):
+        filepath="../../pyCharmTest/venv/data/muenster_stands/stands.shp",
+        pixels=100,
+        buffer=10,
+        outputname="output.tiff"):
     '''
     description of function
 
@@ -31,20 +31,20 @@ def rasterizer(
     )
 
     # create attribute values for geometries
-    #attributes = [np.random.randint(0, 255) for i in
-                  #range(0, len(geometry_coll))]
+    # attributes = [np.random.randint(0, 255) for i in
+    # range(0, len(geometry_coll))]
 
     # join geometry and their attributes
-    #geom_attr = list(zip(geometry_coll, attributes))
+    # geom_attr = list(zip(geometry_coll, attributes))
 
     # cornerstones of bounding box
     bbox = geometry_coll.bounds
 
     x_range = bbox[2] - bbox[0]
-    #y_range = round(bbox[3]) - round(bbox[1])
+    # y_range = round(bbox[3]) - round(bbox[1])
 
-    resolution = x_range/pixels
-    x_range = round(x_range/resolution)*resolution
+    resolution = x_range / pixels
+    x_range = round(x_range / resolution) * resolution
 
     # implemented buffer frame around the geometries
     bbox_plus_buffer = []
@@ -53,7 +53,7 @@ def rasterizer(
     [bbox_plus_buffer.append(bbox[i] - float(buffer)) for i in (0, 1)]
     [bbox_plus_buffer.append(bbox[i] + float(buffer)) for i in (2, 3)]
 
-    x_min = round(bbox_plus_buffer[0]/resolution)*resolution
+    x_min = round(bbox_plus_buffer[0] / resolution) * resolution
     x_max = round(bbox_plus_buffer[2] / resolution) * resolution
     y_min = round(bbox_plus_buffer[1] / resolution) * resolution
     y_max = round(bbox_plus_buffer[3] / resolution) * resolution
@@ -61,11 +61,11 @@ def rasterizer(
     # create a grid for the geometry bounding box
     geom_y, geom_x = np.mgrid[y_min:y_max:float(resolution),
                      x_min:x_max:float(resolution)]
-
     # create a point geometry for every grid cell
+
     geom_pixels = []
     for i in range(0, len(geom_x[:, 1])):
-        for j in range(0, len(geom_x[1, :])):
+        for j in range(0, len(geom_y[1, :])):
             geom_pixels.append(spg.Point([geom_x[i, j], geom_y[i, j]]))
 
     # check if the pixel/point lies within one of the geometries (separately)
@@ -90,7 +90,7 @@ def rasterizer(
     for i in range(0, len(geometry_coll)):
         for j in range(0, len(within_list[0])):
             if within_list[i][j] == 1:
-                within_list[i][j] = geom_attr[i][1]
+                within_list[i][j] = 1
 
     # check for geometry attribute
     for i in range(0, len(geometry_coll)):
@@ -106,7 +106,7 @@ def rasterizer(
     within_list_sum = within_list[0]
 
     ## set radiometric resolution to 8bit
-    # within_list_sum = np.round_(255 * (np.true_divide(within_list_sum, max(within_list_sum))))
+    within_list_sum = np.round_(255 * (np.true_divide(within_list_sum, max(within_list_sum))))
 
     # check for geometry attributes
     print("Attribute values of geometries: ", np.unique(within_list_sum))
@@ -127,7 +127,8 @@ def rasterizer(
     ##write image data to tiff file
     sk.external.tifffile.imsave(outputname, flipped_array)
 
-rasterizer()
-#rasterizer(filepath="shps/AX_Gebiet_Kreis_polygon.shp",
- #          pixels=1000,
-  #         outputname="AX.tiff")
+
+#rasterizer()
+rasterizer(filepath="../test_lines/tst_lines.shp",
+           pixels=100,
+           outputname="tst_lines.tiff")
