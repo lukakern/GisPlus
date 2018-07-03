@@ -7,10 +7,7 @@ import shapely.geometry as spg
 import numpy as np
 import matplotlib.pyplot as plt
 
-<<<<<<< HEAD
 
-=======
->>>>>>> 3099e29df5471d044d117b4cb6b780d013f5a51a
 
 
 '''
