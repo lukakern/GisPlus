@@ -40,11 +40,11 @@ def rasterizer(
     # cornerstones of bounding box
     bbox = geometry_coll.bounds
 
-    x_range = bbox[0] - bbox[2]
+    x_range = bbox[2] - bbox[0]
     #y_range = round(bbox[3]) - round(bbox[1])
 
     resolution = x_range/pixels
-    x_range = round(x_range/resolution)/resolution
+    x_range = round(x_range/resolution)*resolution
 
     # implemented buffer frame around the geometries
     bbox_plus_buffer = []
@@ -54,9 +54,9 @@ def rasterizer(
     [bbox_plus_buffer.append(bbox[i] + float(buffer)) for i in (2, 3)]
 
     x_min = round(bbox_plus_buffer[0]/resolution)*resolution
-    x_max = round(bbox_plus_buffer[2]/resolution)*resolution
-    y_min = round(bbox_plus_buffer[1]/resolution)*resolution
-    y_max = round(bbox_plus_buffer[3]/resolution)*resolution
+    x_max = round(bbox_plus_buffer[2] / resolution) * resolution
+    y_min = round(bbox_plus_buffer[1] / resolution) * resolution
+    y_max = round(bbox_plus_buffer[3] / resolution) * resolution
 
     # create a grid for the geometry bounding box
     geom_y, geom_x = np.mgrid[y_min:y_max:float(resolution),
@@ -74,8 +74,10 @@ def rasterizer(
         if (isinstance(geometry_coll[i], spg.polygon.Polygon)):
             step = [pixel.within(geometry_coll[i]) for pixel in geom_pixels]
         if (isinstance(geometry_coll[i], spg.point.Point)):
-            step = [pixel.x == round(geometry_coll[i].x/resolution)*resolution and
-                    pixel.y == round(geometry_coll[i].y/resolution)*resolution
+            step = [pixel.x == round(
+                geometry_coll[i].x / resolution) * resolution and
+                    pixel.y == round(
+                geometry_coll[i].y / resolution) * resolution
                     for pixel in geom_pixels]
         if (isinstance(geometry_coll[i], spg.linestring.LineString)):
             step = [pixel.within(geometry_coll[i].buffer(float(resolution)))
@@ -100,12 +102,11 @@ def rasterizer(
         for j in range(0, len(within_list[0])):
             within_list[0][j] = within_list[0][j] + within_list[i][j]
 
-
     # write in single list
     within_list_sum = within_list[0]
 
     ## set radiometric resolution to 8bit
-    within_list_sum = np.round_(255 * (np.true_divide(within_list_sum, max(within_list_sum))))
+    # within_list_sum = np.round_(255 * (np.true_divide(within_list_sum, max(within_list_sum))))
 
     # check for geometry attributes
     print("Attribute values of geometries: ", np.unique(within_list_sum))
@@ -120,12 +121,11 @@ def rasterizer(
 
     # flip array for correct presentation
     flipped_array = np.flipud(within_array)
-    #plt.imshow(flipped_array, plt.cm.gray)
-    #plt.show()
+    # plt.imshow(flipped_array, plt.cm.gray)
+    # plt.show()
 
     ##write image data to tiff file
     sk.external.tifffile.imsave(outputname, flipped_array)
-
 
 rasterizer()
 #rasterizer(filepath="shps/AX_Gebiet_Kreis_polygon.shp",
