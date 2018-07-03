@@ -12,9 +12,6 @@ import matplotlib.pyplot as plt
 <<<<<<< HEAD
 
 attributes = [np.random.randint(0, 100) for i in range(0, 3)]
-=======
->>>>>>> e02db13cada49b38a083ce602180b6f1cb813c9f
-
 
 '''
 Test Polygon
