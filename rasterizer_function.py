@@ -1,3 +1,5 @@
+from typing import List, Any, Union
+
 import fiona
 import matplotlib.pyplot as plt
 import numpy as np
@@ -29,31 +31,32 @@ def rasterizer(
     )
 
     # create attribute values for geometries
-
     #attributes = [np.random.randint(0, 255) for i in
-    #              range(0, len(geometry_coll))]
+                  #range(0, len(geometry_coll))]
 
     # join geometry and their attributes
     #geom_attr = list(zip(geometry_coll, attributes))
 
-
     # cornerstones of bounding box
     bbox = geometry_coll.bounds
 
-    x_range = round(bbox[0]) - round(bbox[2])
+    x_range = bbox[0] - bbox[2]
     #y_range = round(bbox[3]) - round(bbox[1])
 
     resolution = x_range/pixels
+    x_range = round(x_range/resolution)/resolution
 
     # implemented buffer frame around the geometries
-    bbox_plus_buffer = []  # implemented buffer
+    bbox_plus_buffer = []
+    # type: #List[Union[float, Any]]
+    #  implemented buffer
     [bbox_plus_buffer.append(bbox[i] - float(buffer)) for i in (0, 1)]
     [bbox_plus_buffer.append(bbox[i] + float(buffer)) for i in (2, 3)]
 
-    x_min = round(bbox_plus_buffer[0])
-    x_max = round(bbox_plus_buffer[2])
-    y_min = round(bbox_plus_buffer[1])
-    y_max = round(bbox_plus_buffer[3])
+    x_min = round(bbox_plus_buffer[0]/resolution)*resolution
+    x_max = round(bbox_plus_buffer[2]/resolution)*resolution
+    y_min = round(bbox_plus_buffer[1]/resolution)*resolution
+    y_max = round(bbox_plus_buffer[3]/resolution)*resolution
 
     # create a grid for the geometry bounding box
     geom_y, geom_x = np.mgrid[y_min:y_max:float(resolution),
@@ -71,8 +74,8 @@ def rasterizer(
         if (isinstance(geometry_coll[i], spg.polygon.Polygon)):
             step = [pixel.within(geometry_coll[i]) for pixel in geom_pixels]
         if (isinstance(geometry_coll[i], spg.point.Point)):
-            step = [pixel.x == round(geometry_coll[i].x) and
-                    pixel.y == round(geometry_coll[i].y)
+            step = [pixel.x == round(geometry_coll[i].x/resolution)*resolution and
+                    pixel.y == round(geometry_coll[i].y/resolution)*resolution
                     for pixel in geom_pixels]
         if (isinstance(geometry_coll[i], spg.linestring.LineString)):
             step = [pixel.within(geometry_coll[i].buffer(float(resolution)))
@@ -84,11 +87,8 @@ def rasterizer(
     # for every True in of the within list the attribute of the geometry is taken
     for i in range(0, len(geometry_coll)):
         for j in range(0, len(within_list[0])):
-           if within_list[i][j] == 1:
-                within_list[i][j] = 1
-           if within_list[i][j] == 0:
-                within_list[i][j] = 0
-
+            if within_list[i][j] == 1:
+                within_list[i][j] = geom_attr[i][1]
 
     # check for geometry attribute
     for i in range(0, len(geometry_coll)):
@@ -127,7 +127,7 @@ def rasterizer(
     sk.external.tifffile.imsave(outputname, flipped_array)
 
 
-#rasterizer()
-rasterizer(filepath="shps/cities.shp",
-           pixels=1000,
-           outputname="cities.tiff")
+rasterizer()
+#rasterizer(filepath="shps/AX_Gebiet_Kreis_polygon.shp",
+ #          pixels=1000,
+  #         outputname="AX.tiff")
