@@ -29,11 +29,13 @@ def rasterizer(
     )
 
     # create attribute values for geometries
+
     #attributes = [np.random.randint(0, 255) for i in
     #              range(0, len(geometry_coll))]
 
     # join geometry and their attributes
     #geom_attr = list(zip(geometry_coll, attributes))
+
 
     # cornerstones of bounding box
     bbox = geometry_coll.bounds
@@ -86,6 +88,7 @@ def rasterizer(
                 within_list[i][j] = 1
            if within_list[i][j] == 0:
            within_list[i][j] = 0
+
 
     # check for geometry attribute
     for i in range(0, len(geometry_coll)):

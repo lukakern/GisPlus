@@ -1,5 +1,3 @@
-
-
 '''
 Hello Hello
 '''
@@ -9,6 +7,10 @@ import shapely.geometry as spg
 import numpy as np
 import matplotlib.pyplot as plt
 
+<<<<<<< HEAD
+
+=======
+>>>>>>> 3099e29df5471d044d117b4cb6b780d013f5a51a
 
 
 '''
@@ -54,7 +56,8 @@ bbox = geometry_coll.bounds
 
 # implemented buffer frame around the geometries
 buffer = input(
-    "Please enter a buffer value for the minimum bounding box: ")
+    "Please enter a buffer value for the minimum bounding box (10 should \
+be enough for a solid frame): ")
 
 bbox_plus_buffer = []  # implemented buffer
 [bbox_plus_buffer.append(bbox[i] - float(buffer)) for i in (0, 1)]
@@ -67,8 +70,8 @@ y_max = round(bbox_plus_buffer[3])
 
 # create a grid for the geometry bounding box
 resolution = input(
-    "Please enter a value for the resolution \
-    (the lower the higher is the resolution): ")
+    "Please enter a value between zero and one for the resolution \
+(the lower the higher is the resolution): ")
 geom_y, geom_x = np.mgrid[y_min:y_max:float(resolution),
                  x_min:x_max:float(resolution)]
 
