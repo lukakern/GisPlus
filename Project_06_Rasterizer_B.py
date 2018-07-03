@@ -81,16 +81,13 @@ for i in range(0, len(geom_x[:, 1])):
 # check if the pixel/point lies within one of the geometries (separately)
 within_list = []
 for i in range(0, len(geometry_coll)):
-    if str(type(geometry_coll[i])) == \
-            "<class 'shapely.geometry.polygon.Polygon'>":
+    if (isinstance(geometry_coll[i], spg.polygon.Polygon)):
         step = [pixel.within(geometry_coll[i]) for pixel in geom_pixels]
-    if str(type(geometry_coll[i])) == \
-            "<class 'shapely.geometry.point.Point'>":
+    if (isinstance(geometry_coll[i], spg.point.Point)):
         step = [pixel.x == round(geometry_coll[i].x) and
                 pixel.y == round(geometry_coll[i].y)
                 for pixel in geom_pixels]
-    if str(type(geometry_coll[i])) == \
-            "<class 'shapely.geometry.linestring.LineString'>":
+    if (isinstance(geometry_coll[i], spg.linestring.LineString)):
         step = [pixel.within(geometry_coll[i].buffer(float(resolution)))
                 for pixel in geom_pixels]
     within_list.append(step)
