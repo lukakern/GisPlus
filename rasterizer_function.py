@@ -26,6 +26,7 @@ def rasterizer(
 
     ## shapely is only abount geometry, it does not deal with any coordinate reference system (CRS)!
     # now use the shape function of Shapely
+    global step
     geometry_coll = spg.collection.GeometryCollection(
         [shape(pol['geometry']) for pol in fiona.open(filepath)]
     )
@@ -71,9 +72,9 @@ def rasterizer(
     # check if the pixel/point lies within one of the geometries (separately)
     within_list = []
     for i in range(0, len(geometry_coll)):
-        if (isinstance(geometry_coll[i], spg.polygon.Polygon)):
+        if isinstance(geometry_coll[i], spg.polygon.Polygon):
             step = [pixel.within(geometry_coll[i]) for pixel in geom_pixels]
-        if (isinstance(geometry_coll[i], spg.point.Point)):
+        if isinstance(geometry_coll[i], spg.point.Point):
             step = [pixel.x == round(
                 geometry_coll[i].x / resolution) * resolution and
                     pixel.y == round(
@@ -86,12 +87,6 @@ def rasterizer(
 
     len(within_list[0])
 
-    # for every True in of the within list the attribute of the geometry is taken
-    for i in range(0, len(geometry_coll)):
-        for j in range(0, len(within_list[0])):
-            if within_list[i][j] == 1:
-                within_list[i][j] = 1
-
     # check for geometry attribute
     for i in range(0, len(geometry_coll)):
         print("Geometry {} contains attribute value: {}".format(i, np.unique(
@@ -103,18 +98,20 @@ def rasterizer(
             within_list[0][j] = within_list[0][j] + within_list[i][j]
 
     # write in single list
-    within_list_sum = within_list[0]
+    within_list_sum = within_list[0]  # type: Union[Union[List[bool], List[Union[bool, Any]]], Any]
 
     ## set radiometric resolution to 8bit
-    within_list_sum = np.round_(255 * (np.true_divide(within_list_sum, max(within_list_sum))))
+    within_list_sum = np.round_(
+        255 * (np.true_divide(within_list_sum, max(within_list_sum))))
 
     # check for geometry attributes
     print("Attribute values of geometries: ", np.unique(within_list_sum))
 
     # create sublists every nth step
     size = len(geom_x[1, :])
-    within_list_sub = [within_list_sum[i:i + size] for i in
-                       range(0, len(within_list_sum), size)]
+    within_list_sub = []
+    for i in range(0, len(within_list_sum), size):
+        within_list_sub.append(within_list_sum[i:i + size])
 
     # create numpy array from the prepared list
     within_array = np.array(within_list_sub, dtype='uint8')
@@ -131,4 +128,4 @@ def rasterizer(
 #rasterizer()
 rasterizer(filepath="../test_lines/tst_lines.shp",
            pixels=100,
-           outputname="tst_lines.tiff")
+           outputname="tst_lines1.tiff")
