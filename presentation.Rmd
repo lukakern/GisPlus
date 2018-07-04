@@ -19,6 +19,7 @@ py_config()
 ## Aim of the project
 image :
 vector -> raster
+![test]("DSC_0107.JPG"){width=400px}
 
 ## The function:
 ```{python eval=FALSE, echo=TRUE}
