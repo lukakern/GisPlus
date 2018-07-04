@@ -48,8 +48,8 @@ def rasterizer(filepath,
     # cornerstones of bounding box 
     bbox = geometry_coll.bounds
 
-    x_range = abs(bbox[2] - bbox[0])
-    y_range = abs(bbox[3] - bbox[1])
+    x_range = abs(round(bbox[2]) - round(bbox[0]))
+    y_range = abs(round(bbox[3]) - round(bbox[1]))
 
     # defining the resolution depending on mean of x_range and y_range
     resolution = np.mean((x_range, y_range)) / pixels
@@ -58,8 +58,8 @@ def rasterizer(filepath,
 
     # implemented buffer frame around the geometries
     bbox_plus_buffer = []
-    [bbox_plus_buffer.append(bbox[i] - float(buffer)) for i in (0, 1)]
-    [bbox_plus_buffer.append(bbox[i] + float(buffer)) for i in (2, 3)]
+    [bbox_plus_buffer.append(bbox[i] - float(buffer * resolution)) for i in (0, 1)]
+    [bbox_plus_buffer.append(bbox[i] + float(buffer * resolution)) for i in (2, 3)]
 
     # define relativised minimum and maximum values of the bounding box
     x_min = round(bbox_plus_buffer[0] / resolution) * resolution
