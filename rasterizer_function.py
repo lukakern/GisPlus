@@ -27,11 +27,10 @@ def rasterizer(
     geometry_coll = spg.collection.GeometryCollection(
         [shape(pol['geometry']) for pol in fiona.open(filepath)]
     )
-
     # cornerstones of bounding box
     bbox = geometry_coll.bounds
 
-    x_range = abs(round(bbox[2]) - round(bbox[1]))
+    x_range = abs(round(bbox[2]) - round(bbox[0]))
     y_range = abs(round(bbox[3]) - round(bbox[1]))
 
     # defining the resolution
@@ -48,7 +47,7 @@ def rasterizer(
     y_min = round(bbox_plus_buffer[1] / resolution) * resolution
     y_max = round(bbox_plus_buffer[3] / resolution) * resolution
 
-    # create a grid for the geometry bounding box
+    # create a 'grid' for the geometry bounding box
     geom_y, geom_x = np.mgrid[y_min:y_max:float(resolution),
                               x_min:x_max:float(resolution)]
     # create a point geometry for every grid cell
@@ -59,10 +58,14 @@ def rasterizer(
 
     # check if the pixel/point lies within one of the geometries (separately)
     within_list = []
-    for i in range(0, len(geometry_coll)):
-        if isinstance(geometry_coll[i], spg.polygon.Polygon):
+    if isinstance(geometry_coll[0], spg.polygon.Polygon):
+        for i in range(0, len(geometry_coll)):
             step = [pixel.within(geometry_coll[i]) for pixel in geom_pixels]
-        if isinstance(geometry_coll[i], spg.point.Point):
+            print("The process is running: {} % completed ".format(
+                str(round(100 * i / len(geometry_coll), 2))))
+            within_list.append(step)
+    if isinstance(geometry_coll[0], spg.point.Point):
+        for i in range(0, len(geometry_coll)):
             step = [
                 (
                         (pixel.x > (geometry_coll[i].x - 0.5 * resolution)) &
@@ -73,11 +76,16 @@ def rasterizer(
                         (pixel.y <= (geometry_coll[i].y + 0.5 * resolution))
                 ) for pixel in geom_pixels
             ]
-        if (isinstance(geometry_coll[i], spg.linestring.LineString)):
+            print("The process is running: {} % completed ".format(
+                str(round(100 * i / len(geometry_coll), 2))))
+            within_list.append(step)
+    if isinstance(geometry_coll[0], spg.linestring.LineString):
+        for i in range(0, len(geometry_coll)):
             step = [pixel.within(geometry_coll[i].buffer(float(resolution)))
                     for pixel in geom_pixels]
-        print("The process is running: {} % completed ".format(str(round(100* i/len(geometry_coll),2))))
-        within_list.append(step)
+            print("The process is running: {} % completed ".format(
+                str(round(100 * i / len(geometry_coll), 2))))
+            within_list.append(step)
 
     # join separate within_list 's. If overlapping: add attribute values
     for i in range(1, len(geometry_coll)):
@@ -114,7 +122,9 @@ def rasterizer(
     sk.external.tifffile.imsave(outputname, flipped_array)
 
 #rasterizer()
-rasterizer(filepath="../test_points/tst_points.shp",
-           pixels=50,
-           buffer = 10,
-           outputname="points_tst.tiff")
+rasterizer(filepath="../shps/cities.shp",
+           pixels=100,
+           buffer = 5,
+           outputname="cities1.tiff",
+           output_path=False,
+           preview=False)
