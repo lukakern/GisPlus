@@ -1,0 +1,71 @@
+---
+title: "Gis+ Project Rasterizer"
+author: "Luka Kern, Felix Rentschler and Nele Stackelberg"
+date: "4 7 2018"
+output: ioslides_presentation
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+library(reticulate)
+use_python("/anaconda3/envs/py35/bin/python")
+#use_virtualenv("~/py35")
+#use_condaenv("py35")
+use_condaenv(condaenv = "py35", conda = "/anaconda3/bin/conda")
+
+py_config()
+```
+
+## Aim of the project
+image :
+vector -> raster
+![test]("DSC_0107.JPG"){width=400px}
+
+## The function:
+```{python eval=FALSE, echo=TRUE}
+def rasterizer(
+        filepath="../random_vectordata.shp",
+        pixels=100,
+        buffer=10,
+        outputname="output.tiff"):
+    '''
+    description of function
+
+    buffer: 
+        Please enter a buffer value for the minimum bounding box:
+    resolution: 
+        Please enter a value for the resolution 
+        (the lower the higher is the resolution):
+        
+    :return:
+    '''
+    return()
+```
+
+## Structure of the function:
+- load shapefile (package fiona)
+- create bounding box
+- create grid
+- within-query  
+- set radiometric resolution
+- sublist (?)
+- filp array
+- save as tif (package skimage)
+
+## Slide with R Output
+```{python eval=FALSE, echo=TRUE}
+import matplotlib
+
+z = 2*4
+z*k
+```
+
+
+## Slide with Plot
+```{python echo=TRUE}
+import matplotlib
+
+z = 2*4
+```
+
+## Issues
