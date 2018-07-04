@@ -60,24 +60,28 @@ def rasterizer(
     geom_y, geom_x = np.mgrid[y_min:y_max:float(resolution),
                      x_min:x_max:float(resolution)]
     # create a point geometry for every grid cell
-    print(geometry_coll)
     geom_pixels = []
     for i in range(0, len(geom_x[:, 1])):
         for j in range(0, len(geom_y[1, :])):
             geom_pixels.append(spg.Point([geom_x[i, j], geom_y[i, j]]))
 
-    print(type(geom_pixels))
+
     # check if the pixel/point lies within one of the geometries (separately)
     within_list = []
     for i in range(0, len(geometry_coll)):
         if isinstance(geometry_coll[i], spg.polygon.Polygon):
             step = [pixel.within(geometry_coll[i]) for pixel in geom_pixels]
         if isinstance(geometry_coll[i], spg.point.Point):
-            step = [pixel.x == round(
-                geometry_coll[i].x / resolution) * resolution and
-                    pixel.y == round(
-                geometry_coll[i].y / resolution) * resolution
-                    for pixel in geom_pixels]
+            step = [
+                (
+                        (pixel.x > (geometry_coll[i].x - 0.5 * resolution)) &
+                        (pixel.x <= (geometry_coll[i].x + 0.5 * resolution))
+                ) &
+                (
+                        (pixel.y > (geometry_coll[i].y - 0.5 * resolution)) &
+                        (pixel.y <= (geometry_coll[i].y + 0.5 * resolution))
+                ) for pixel in geom_pixels
+            ]
         if (isinstance(geometry_coll[i], spg.linestring.LineString)):
             step = [pixel.within(geometry_coll[i].buffer(float(resolution)))
                     for pixel in geom_pixels]
@@ -121,8 +125,9 @@ def rasterizer(
     ##write image data to tiff file
     sk.external.tifffile.imsave(outputname, flipped_array)
 
+
 #rasterizer()
-rasterizer(filepath="../shps/cities.shp",
+rasterizer(filepath="../test_points/tst_points.shp",
            pixels=100,
            buffer = 10,
-           outputname="cities.tiff")
+           outputname="points_tst.tiff")
