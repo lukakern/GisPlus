@@ -112,8 +112,6 @@ def rasterizer(filepath,
     # set radiometric resolution to 8bit
     within_list_sum = np.round_(255 * (np.true_divide(within_list_sum, max(within_list_sum))))
 
-    # check for geometry attributes
-    print("Attribute values of geometries: ", np.unique(within_list_sum))
 
     # create sublists every nth step
     size = len(geom_x[1, :])
