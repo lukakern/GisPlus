@@ -5,7 +5,8 @@ Create Test shape files
 import shapely.geometry as spg
 import numpy as np
 import os
-import ogr, osr
+import ogr
+from osgeo import osr
 
 '''
 Test Polygon
@@ -79,7 +80,7 @@ if os.path.exists(filepath):
 src = drv.CreateDataSource(filepath)
 
 reference = osr.SpatialReference()
-reference.ImportFromEPSG(25823)
+reference.ImportFromEPSG(3994)
 
 # create layer
 lyr = src.CreateLayer("Polygons", reference, geom_type=ogr.wkbPolygon)
