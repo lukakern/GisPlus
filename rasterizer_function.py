@@ -22,7 +22,6 @@ def rasterizer(
     :return:
     '''
 
-    ## if filepath = "" (empty) random vectordata will be created and transformed to a raster layer
 
     ## shapely is only abount geometry, it does not deal with any coordinate reference system (CRS)!
     # now use the shape function of Shapely
