@@ -1,6 +1,3 @@
-# user choice: radiometric resolution ?
-# changed: resolution calculation, setting True and False to 1 and zero
-
 import shapely.geometry as spg
 from shapely.geometry import shape
 import numpy as np
@@ -18,35 +15,37 @@ def rasterizer(filepath,
                outputname="output.tiff",
                output_path=True,
                preview=True):
+    
     """rasterizer function
-
+    
     This multi-line comment is a special one,
-    called a docstring. It should describe the
-    fuction in a single statement and also in
+    called a docstring. It should describe the 
+    fuction in a single statement and also in 
     a longer description
-
+    
     Example usage
     -------------
-
-    You can even give an code example in the
+    
+    You can even give an code example in the 
     docstring:
     The function will alwys return 42:
-
+    
     special_multi_line_comment()
     >> 42
-
+    
     Parameters
     ----------
     :param foo: string, can be given, useless
     :return: int, 42
     """
 
+
     # collect geometries of shape file
     geometry_coll = spg.collection.GeometryCollection(
         [shape(pol['geometry']) for pol in fiona.open(filepath)]
     )
 
-    # cornerstones of bounding box
+    # cornerstones of bounding box 
     bbox = geometry_coll.bounds
 
     x_range = abs(bbox[2] - bbox[0])
@@ -54,6 +53,8 @@ def rasterizer(filepath,
 
     # defining the resolution depending on mean of x_range and y_range
     resolution = np.mean((x_range, y_range)) / pixels
+
+
 
     # implemented buffer frame around the geometries
     bbox_plus_buffer = []
@@ -68,7 +69,7 @@ def rasterizer(filepath,
 
     # create a grid inside the geometry bounding box
     geom_y, geom_x = np.mgrid[y_min:y_max:float(resolution),
-                     x_min:x_max:float(resolution)]
+                              x_min:x_max:float(resolution)]
 
     # create a point geometry for every grid cell
     geom_pixels = []
@@ -92,25 +93,24 @@ def rasterizer(filepath,
                         (pixel.y <= (geometry_coll[i].y + 0.5 * resolution))
                 ) for pixel in geom_pixels
             ]
-
+            
         if (isinstance(geometry_coll[i], spg.linestring.LineString)):
             step = [pixel.within(geometry_coll[i].buffer(float(resolution)))
                     for pixel in geom_pixels]
-        print('The process is running: {}% completed'.format(
-            (round(100 * i / len(geometry_coll), 2))))
+        print('The process is running: {}% completed'.format((round(100 * i/len(geometry_coll),2))))
         within_list.append(step)
-
+    
+    
     # join separate within_list 's. If overlapping: add attribute values
     for i in range(1, len(geometry_coll)):
         for j in range(0, len(within_list[0])):
             within_list[0][j] = within_list[0][j] + within_list[i][j]
-
+        
     # write in single list
     within_list_sum = within_list[0]
 
     # set radiometric resolution to 8bit
-    within_list_sum = np.round_(
-        255 * (np.true_divide(within_list_sum, max(within_list_sum))))
+    within_list_sum = np.round_(255 * (np.true_divide(within_list_sum, max(within_list_sum))))
 
     # check for geometry attributes
     print("Attribute values of geometries: ", np.unique(within_list_sum))
@@ -118,26 +118,21 @@ def rasterizer(filepath,
     # create sublists every nth step
     size = len(geom_x[1, :])
     within_list_sub = [within_list_sum[i:i + size] for i in
-                       range(0, len(within_list_sum), size)]
+                        range(0, len(within_list_sum), size)]
 
     # create numpy array from the prepared list
     within_array = np.array(within_list_sub, dtype='uint8')
 
     # flip array for correct presentation
     flipped_array = np.flipud(within_array)
-
+    
     if preview == True:
         plt.imshow(flipped_array, plt.cm.gray)
         plt.show()
 
     if output_path == True:
-        os.chdir(input(
-            'Please enter the path to the direction where the .tiff file should be saved: '))
+        os.chdir(input('Please enter the path to the direction where the .tiff file should be saved: '))
 
     ##write image data to tiff file
     sk.external.tifffile.imsave(outputname, flipped_array)
-
-
-filepath = '/Users/lukakern/Documents/Studium/Master/GISplus/GisPlus/test_aphylantes/wetransfer-744a06/cities.shp'
-# filepath = '/Users/lukakern/Documents/Studium/Master/GISplus/GisPlus/test_aphylantes/wetransfer-744a06/AX_Gebiet_Kreis_polygon.shp'
-rasterizer(filepath, pixels=500, outputname="cities_output.tiff")
+    
