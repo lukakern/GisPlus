@@ -1,0 +1,11 @@
+\beamer@sectionintoc {1}{Task}{2}{0}{1}
+\beamer@sectionintoc {2}{Structure of the Function}{3}{0}{2}
+\beamer@subsectionintoc {2}{1}{Load Shapefile}{3}{0}{2}
+\beamer@subsectionintoc {2}{2}{Bounding Box}{4}{0}{2}
+\beamer@subsectionintoc {2}{3}{Create Grid}{5}{0}{2}
+\beamer@subsectionintoc {2}{4}{Within Query}{6}{0}{2}
+\beamer@subsectionintoc {2}{5}{Sublist}{7}{0}{2}
+\beamer@subsectionintoc {2}{6}{Set radiometric resolution}{8}{0}{2}
+\beamer@subsectionintoc {2}{7}{Flip array}{9}{0}{2}
+\beamer@subsectionintoc {2}{8}{Save as tiff}{10}{0}{2}
+\beamer@sectionintoc {3}{Issues}{11}{0}{3}
