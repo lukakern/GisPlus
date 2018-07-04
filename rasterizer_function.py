@@ -22,8 +22,6 @@ def rasterizer(
     :return:
     '''
 
-    ## if filepath = "" (empty) random vectordata will be created and transformed to a raster layer
-
     ## shapely is only abount geometry, it does not deal with any coordinate reference system (CRS)!
     # now use the shape function of Shapely
     global step
@@ -49,10 +47,9 @@ def rasterizer(
 
     # implemented buffer frame around the geometries
     bbox_plus_buffer = []
-    # type: #List[Union[float, Any]]
     #  implemented buffer
-    [bbox_plus_buffer.append(bbox[i] - float(buffer)) for i in (0, 1)]
-    [bbox_plus_buffer.append(bbox[i] + float(buffer)) for i in (2, 3)]
+    [bbox_plus_buffer.append(bbox[i] - float(buffer*resolution)) for i in (0, 1)]
+    [bbox_plus_buffer.append(bbox[i] + float(buffer*resolution)) for i in (2, 3)]
 
     x_min = round(bbox_plus_buffer[0] / resolution) * resolution
     x_max = round(bbox_plus_buffer[2] / resolution) * resolution
@@ -63,12 +60,13 @@ def rasterizer(
     geom_y, geom_x = np.mgrid[y_min:y_max:float(resolution),
                      x_min:x_max:float(resolution)]
     # create a point geometry for every grid cell
-
+    print(geometry_coll)
     geom_pixels = []
     for i in range(0, len(geom_x[:, 1])):
         for j in range(0, len(geom_y[1, :])):
             geom_pixels.append(spg.Point([geom_x[i, j], geom_y[i, j]]))
 
+    print(type(geom_pixels))
     # check if the pixel/point lies within one of the geometries (separately)
     within_list = []
     for i in range(0, len(geometry_coll)):
@@ -83,9 +81,8 @@ def rasterizer(
         if (isinstance(geometry_coll[i], spg.linestring.LineString)):
             step = [pixel.within(geometry_coll[i].buffer(float(resolution)))
                     for pixel in geom_pixels]
+        print(i)
         within_list.append(step)
-
-    len(within_list[0])
 
     # check for geometry attribute
     for i in range(0, len(geometry_coll)):
@@ -124,8 +121,8 @@ def rasterizer(
     ##write image data to tiff file
     sk.external.tifffile.imsave(outputname, flipped_array)
 
-
 #rasterizer()
 rasterizer(filepath="../shps/cities.shp",
            pixels=100,
+           buffer = 10,
            outputname="cities.tiff")
