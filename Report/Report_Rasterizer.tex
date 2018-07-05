@@ -134,14 +134,25 @@ The functions argument "buffer" describes the amount of pixels in the bounding b
 
 The dimension of the geometry collection (xmin, ymin, xmax, ymax) is used to define the dimension of the outer frame of the bounding box by adding and subtracting the boundary box width.
 
-The minimum and maximum coordinate values (dimension) of the outer frame of the boundary box are used to create a grid with the function \textit{numpy.mgrid}. The coordinates of every grid-cell (= every pixel) are saved as point-geometry. Those geometries are stored in a list.
+The minimum and maximum coordinate values (dimension) of the outer frame of the boundary box are used to create a grid with the function \textit{numpy.mgrid}. The coordinates of every grid-cell (= every pixel) are saved as point-geometry. Those geometries are stored in a list called geom\_pixels.
 %bis geom_pixel beschreiben
 
 \subsection{Within Query}
+Now, that the position of every grid-cell is known, the vector geometries can be transferred to the raster-grid. The query, that defines wheter a geometry object covers a pixel (metaphorically speaking: imagine a polygon laying on a squared paper and transforming it manually) depends on the geometry type of the vector file. 
+If it is a Point, the query asks if the pixels position (from geom\_pixels) equals the points position (+- 0.5*resolution in both x- and y-dimension) in the vector data. The addition respectively subtraction of 0.5 times the resolution makes sure that every point is detected, even if it is not on the midpoint of the grid cell. 
+If the vector geometry is a line, a buffer around the line is calculated. The within-function of the shapely-package is than used to query if a point is in this buffer. The same query is also used for polygon-geometries, where the within-function is applied directly to the polygon and not to a buffer.
+The query is applied to all geometries of the geometry collection. For each geometry a list with boolean values is the result. These list are appended one after another as sublists.
 
-\subsection{Unite Sublists}
+\subsection{Writing the result in an array}
+In the next step the sublists are combined. Therefore the sum off all sublist is written to a new list. The sum of boolean values is the amount of "True"-values.  To create an array of the right size out of this list, it has first to be transformed into sublist, each with the length of the amount of pixels on the x-axis. The resulting format can be transformed to a numpy-array.
+
 \subsection{Set Radiometric Resolution}
+To make sure that all values of the array will be displayed in the 8bit TIFF file, the values are transformed to the range between 0 and 255. The calculation of every value $x_{i\_new}$ from its former value $x_i$ in the grid $x$ is computed according to the following formula:
+$ x_{i\_new} = 255 * \frac{x_i}{x_{max}} $
+
 \subsection{Flip Array and Save as TIFF}
+If the array was plotted at this stage, pythons characteristics to show the y-achsis the reverse way would result in a inverted image. Therefore the array is flipped the up/down direction with the flipud-function of the package numpy.
+After all this has been computed, the result can be saved as TIFF-file. For this purpose the scikit-package provieds the imsave-function, which is used here.
 
 \section{Issues}
 \subsection{Solved}
