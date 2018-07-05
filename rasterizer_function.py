@@ -89,10 +89,10 @@ def rasterizer(filepath,
 
     # implemented buffer frame around the geometries
     bbox_plus_buffer = []
-    [bbox_plus_buffer.append(bbox[i] - float(buffer * resolution)) for i in
-     (0, 1)]
-    [bbox_plus_buffer.append(bbox[i] + float(buffer * resolution)) for i in
-     (2, 3)]
+    [bbox_plus_buffer.append(bbox[i] - float(buffer * resolution))
+     for i in (0, 1)]
+    [bbox_plus_buffer.append(bbox[i] + float(buffer * resolution))
+     for i in (2, 3)]
 
     # define relativised minimum and maximum values of the bounding box
     x_min = round(bbox_plus_buffer[0] / resolution) * resolution
