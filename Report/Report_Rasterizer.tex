@@ -1,0 +1,158 @@
+\documentclass[10pt, a4paper]{article}
+
+\usepackage{graphicx} 
+\usepackage{natbib}
+\bibpunct{(}{)}{;}{a}{}{,}  % to adjust punctuation in references
+\usepackage[utf8]{inputenc}
+\usepackage[margin=10pt, font=small, labelfont=bf]{caption} 
+\usepackage[margin=1in]{geometry}
+\usepackage{color}
+\usepackage{xcolor}
+\usepackage[]{hyperref}
+\definecolor{darkblue}{rgb}{0,0,.5}
+\hypersetup{colorlinks=true, breaklinks=true, linkcolor=darkblue, menucolor=darkblue, urlcolor=darkblue, citecolor=darkblue}
+\usepackage{multicol}              
+\usepackage{multirow}
+\usepackage{booktabs}  
+\usepackage{enumerate}
+\usepackage{subcaption}
+\usepackage{eurosym}
+\usepackage{color}
+\usepackage{siunitx}
+\usepackage{lineno} % for line numbers 
+\usepackage{setspace}
+%\usepackage{float}
+\usepackage{listings}
+\usepackage{xfrac}
+\usepackage[T1]{fontenc}
+
+
+%\definecolor{middlegray}{rgb}{0.5,0.5,0.5}
+%\definecolor{lightgray}{rgb}{0.8,0.8,0.8}%
+%\definecolor{orange}{rgb}{0.8,0.3,0.3}
+%\definecolor{yac}{rgb}{0.6,0.6,0.1}
+
+%\lstset{
+%	basicstyle=\small\ttfamily,
+%	keywordstyle=\bfseries\ttfamily\color{orange},
+%	stringstyle=\color{blue}\ttfamily,
+%	commentstyle=\color{teal}\ttfamily,
+%	emph={square}, 
+%	emphstyle=\color{blue}\texttt,
+%	emph={[2]root,base},
+%	emphstyle={[2]\color{yac}\texttt},
+%%	flexiblecolumns=false,
+	%tabsize=2,
+	%xleftmargin=5pt
+%}
+
+% Default fixed font does not support bold face
+\DeclareFixedFont{\ttb}{T1}{txtt}{bx}{n}{12} % for bold
+\DeclareFixedFont{\ttm}{T1}{txtt}{m}{n}{12}  % for normal
+
+% Custom colors
+\usepackage{color}
+\definecolor{deepblue}{rgb}{0,0,0.5}
+\definecolor{deepred}{rgb}{0.6,0,0}
+\definecolor{deepgreen}{rgb}{0,0.5,0}
+% Python style for highlighting
+\newcommand\pythonstyle{\lstset{
+		language=Python,
+		basicstyle=\ttm,
+		otherkeywords={self},             % Add keywords here
+		keywordstyle=\ttb\color{deepblue},
+		emph={MyClass,__init__},          % Custom highlighting
+		emphstyle=\ttb\color{deepred},    % Custom highlighting style
+		stringstyle=\color{deepgreen},
+		frame=tb,                         % Any extra options here
+		showstringspaces=false            % 
+}}
+
+\setlength\parindent{0pt}
+
+\begin{document}
+
+\markboth{}
+\\\noindent University of Freiburg \hspace{10cm}  July 6, 2018
+\\Faculty of Environment and Natural Resources
+\\Module: GIS Plus
+\\Lecturer: João Paulo Pereira, Holger Weinacker
+\\Authors: Luka Kern, Nele Stackelberg and Felix Rentschler
+\\
+
+\begin{center}
+	\huge{Project 06: Rasterizer Function} \vspace{0.5cm}\\
+	%\Large {Rasterizer}
+\end{center}
+
+%\maketitle
+\
+\onehalfspacing % larger vertical space between lines 
+%\linenumbers
+
+
+
+\begin{abstract}
+	A rasterinzing tool creates a regular grid whithin the bounding box of a geometry collection and assigns a value to each cell depending on the presence of a geometry in that cell region. This information can either be a binary one (no-data / data) or based on the geometry attributes. For this Project, the first cell will create a randomized geometry list containing the input data. The attributes for each of the three geometries are stored in a separated attributes list.
+\end{abstract}
+
+
+\section{Aim of the Project}
+The aim of this project was to create a function that generates a raster-file (.tif). This file displays the geometries from a shapfile, which was given as input to the function. The spatial resolution and name of the output-file can be defined as input to the function.
+For the case that no shapefile is available to run the function, a code to generate random geometries is provided.
+
+
+\section{Structure of the function}
+\subsection{Load in the shapefile}
+To load in the shapefile, the fiona-package is used. Every geometry-object of the shapefile is stored in a GeometryCollection from the shapely-package.
+
+\subsection{Defining the bounding box}
+We create a buffer around the actual shape of the shapefile which will look prettier in the resulting image. 
+
+\newpage
+% Python environment
+\lstnewenvironment{python}[1][]
+{
+	\pythonstyle
+	\lstset{#1}
+}
+{}
+
+
+\begin{python}
+class MyClass(Yourclass):
+		def __init__(self, my, yours):
+		bla = '5 1 2 3 4'
+		print bla
+\end{python}
+\subsection{R Code}
+\begin{lstlisting}[language=Python]
+#=============================================================================
+#                       Initial Values
+#=============================================================================
+def rasterizer(filepath,
+							pixels=100,
+						buffer=10,
+outputname="output.tiff",
+save=True,
+preview=True):
+
+\end{lstlisting}
+
+
+\section{Issues}
+\
+\subsection{Solved}
+\subsection{Unsolved}
+
+
+\begin{figure}[!htbp]
+	\centering
+%	\includegraphics[width=16cm]{wildfire.png}
+%	\caption{Wildfire event in a boreal forest}
+\end{figure}
+
+
+
+
+\end{document}
