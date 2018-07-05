@@ -1,0 +1,46 @@
+\headcommand {\slideentry {0}{0}{1}{1/1}{}{0}}
+\headcommand {\beamer@framepages {1}{1}}
+\headcommand {\sectionentry {1}{Task}{2}{Task}{0}}
+\headcommand {\beamer@sectionpages {1}{1}}
+\headcommand {\beamer@subsectionpages {1}{1}}
+\headcommand {\slideentry {1}{0}{1}{2/2}{}{0}}
+\headcommand {\beamer@framepages {2}{2}}
+\headcommand {\sectionentry {2}{Structure of the Function}{3}{Structure of the Function}{0}}
+\headcommand {\beamer@sectionpages {2}{2}}
+\headcommand {\beamer@subsectionpages {2}{2}}
+\headcommand {\beamer@subsectionentry {0}{2}{1}{3}{Load Shapefile}}\headcommand {\beamer@subsectionpages {3}{2}}
+\headcommand {\slideentry {2}{1}{1}{3/3}{Load Shapefile}{0}}
+\headcommand {\beamer@framepages {3}{3}}
+\headcommand {\beamer@subsectionentry {0}{2}{2}{4}{Bounding Box}}\headcommand {\beamer@subsectionpages {3}{3}}
+\headcommand {\slideentry {2}{2}{1}{4/4}{Bounding Box}{0}}
+\headcommand {\beamer@framepages {4}{4}}
+\headcommand {\beamer@subsectionentry {0}{2}{3}{5}{Create Grid}}\headcommand {\beamer@subsectionpages {4}{4}}
+\headcommand {\slideentry {2}{3}{1}{5/5}{Create Grid}{0}}
+\headcommand {\beamer@framepages {5}{5}}
+\headcommand {\beamer@subsectionentry {0}{2}{4}{6}{Within Query}}\headcommand {\beamer@subsectionpages {5}{5}}
+\headcommand {\slideentry {2}{4}{1}{6/6}{Within Query}{0}}
+\headcommand {\beamer@framepages {6}{6}}
+\headcommand {\beamer@subsectionentry {0}{2}{5}{7}{Sublist}}\headcommand {\beamer@subsectionpages {6}{6}}
+\headcommand {\slideentry {2}{5}{1}{7/7}{Sublist}{0}}
+\headcommand {\beamer@framepages {7}{7}}
+\headcommand {\beamer@subsectionentry {0}{2}{6}{8}{Set radiometric resolution}}\headcommand {\beamer@subsectionpages {7}{7}}
+\headcommand {\slideentry {2}{6}{1}{8/8}{Set radiometric resolution}{0}}
+\headcommand {\beamer@framepages {8}{8}}
+\headcommand {\beamer@subsectionentry {0}{2}{7}{9}{Flip array}}\headcommand {\beamer@subsectionpages {8}{8}}
+\headcommand {\slideentry {2}{7}{1}{9/9}{Flip array}{0}}
+\headcommand {\beamer@framepages {9}{9}}
+\headcommand {\beamer@subsectionentry {0}{2}{8}{10}{Save as tiff}}\headcommand {\beamer@subsectionpages {9}{9}}
+\headcommand {\slideentry {2}{8}{1}{10/10}{Save as tiff}{0}}
+\headcommand {\beamer@framepages {10}{10}}
+\headcommand {\sectionentry {3}{Issues}{11}{Issues}{0}}
+\headcommand {\beamer@sectionpages {3}{10}}
+\headcommand {\beamer@subsectionpages {10}{10}}
+\headcommand {\slideentry {3}{0}{1}{11/11}{}{0}}
+\headcommand {\beamer@framepages {11}{11}}
+\headcommand {\slideentry {3}{0}{2}{12/12}{}{0}}
+\headcommand {\beamer@framepages {12}{12}}
+\headcommand {\beamer@partpages {1}{12}}
+\headcommand {\beamer@subsectionpages {11}{12}}
+\headcommand {\beamer@sectionpages {11}{12}}
+\headcommand {\beamer@documentpages {12}}
+\headcommand {\def \inserttotalframenumber {12}}

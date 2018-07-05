@@ -1,69 +1,110 @@
-from typing import List, Any, Union
+# -*- encoding: utf-8 -*-
+"""Summary of script
 
-import fiona
-import matplotlib.pyplot as plt
-import numpy as np
+This script is about the rasterizer function:
+
+The function creates a raster file (.tiff) from a given shape file.
+
+To do so the function collects the geometries defines a bounding box
+around them. Within the bounding box a regular grid is generated and
+points are created representing the grid cells. Then it is checked if
+the grid cell/point lies within the given geometry. The boolean result
+is transformed to a numpy array with a radiometric resolution of 8 bit.
+This numpy array is then saved as a .tiff file.
+
+"""
+
 import shapely.geometry as spg
 from shapely.geometry import shape
+import numpy as np
+import matplotlib.pyplot as plt
+import fiona
 import skimage as sk
-from skimage import external, io, exposure
+import os
 
 
-def rasterizer(
-        filepath="../../pyCharmTest/venv/data/muenster_stands/stands.shp",
-        pixels=100,
-        buffer=10,
-        outputname="output.tiff"):
-    '''
-    description of function
+def rasterizer(filepath,
+               pixels=100,
+               buffer=10,
+               outputname="output.tiff",
+               save=True,
+               preview=True):
 
-    buffer: Please enter a buffer value for the minimum bounding box:
-    resolution: Please enter a value for the resolution (the lower the higher is the resolution):
-    :return:
-    '''
+    """rasterizer function
 
-    ## if filepath = "" (empty) random vectordata will be created and transformed to a raster layer
+    This function creates a raster file (.tiff) from a given shape file.
 
-    ## shapely is only abount geometry, it does not deal with any coordinate reference system (CRS)!
-    # now use the shape function of Shapely
-    global step
+    To do so the function collects the geometries defines a bounding box
+    around them. Within the bounding box a regular grid is generated and
+    points are created representing the grid cells. Then it is checked if
+    the grid cell/point lies within the given geometry. The boolean result
+    is transformed to a numpy array with a radiometric resolution of 8 bit.
+    This numpy array is then saved as a .tiff file.
+
+    Example usage
+    -------------
+
+    rasterizer(filepath="/Users/Documents/test_polygons",
+               pixels=100,
+               buffer=10,
+               outputname="polygons_output.tiff",
+               save=True,
+               preview=True)
+
+    >> The process is running: 100% completed
+
+    >> Please enter the path to the direction where the .tiff file should be
+    saved: /Users/Documents/results
+
+    >> The file is successfully saved
+
+
+
+    Parameters
+    ----------
+    :param filepath: string
+    :param pixels: integer
+    :param buffer: integer
+    :param outputname: string
+    :param preview: boolean
+    :param save: boolean
+    :return preview: plot
+    :return saved .tiff file: message
+    """
+
+    # collect geometries of shape file
     geometry_coll = spg.collection.GeometryCollection(
         [shape(pol['geometry']) for pol in fiona.open(filepath)]
     )
 
-    # create attribute values for geometries
-    # attributes = [np.random.randint(0, 255) for i in
-    # range(0, len(geometry_coll))]
-
-    # join geometry and their attributes
-    # geom_attr = list(zip(geometry_coll, attributes))
 
     # cornerstones of bounding box
     bbox = geometry_coll.bounds
 
-    x_range = bbox[2] - bbox[0]
-    # y_range = round(bbox[3]) - round(bbox[1])
+    x_range = abs(round(bbox[2]) - round(bbox[0]))
+    y_range = abs(round(bbox[3]) - round(bbox[1]))
 
-    resolution = x_range / pixels
-    x_range = round(x_range / resolution) * resolution
+    # defining the resolution depending on mean of x_range and y_range
+    resolution = np.mean((x_range, y_range)) / pixels
 
     # implemented buffer frame around the geometries
     bbox_plus_buffer = []
-    # type: #List[Union[float, Any]]
-    #  implemented buffer
-    [bbox_plus_buffer.append(bbox[i] - float(buffer)) for i in (0, 1)]
-    [bbox_plus_buffer.append(bbox[i] + float(buffer)) for i in (2, 3)]
+    [bbox_plus_buffer.append(bbox[i] - float(buffer * resolution))
+     for i in (0, 1)]
+    [bbox_plus_buffer.append(bbox[i] + float(buffer * resolution))
+     for i in (2, 3)]
 
+    # define relativised minimum and maximum values of the bounding box
     x_min = round(bbox_plus_buffer[0] / resolution) * resolution
     x_max = round(bbox_plus_buffer[2] / resolution) * resolution
     y_min = round(bbox_plus_buffer[1] / resolution) * resolution
     y_max = round(bbox_plus_buffer[3] / resolution) * resolution
 
-    # create a grid for the geometry bounding box
+    # create a grid inside the geometry bounding box
     geom_y, geom_x = np.mgrid[y_min:y_max:float(resolution),
-                     x_min:x_max:float(resolution)]
-    # create a point geometry for every grid cell
+                              x_min:x_max:float(resolution)]
 
+    # create a point geometry for every grid cell
     geom_pixels = []
     for i in range(0, len(geom_x[:, 1])):
         for j in range(0, len(geom_y[1, :])):
@@ -75,22 +116,23 @@ def rasterizer(
         if isinstance(geometry_coll[i], spg.polygon.Polygon):
             step = [pixel.within(geometry_coll[i]) for pixel in geom_pixels]
         if isinstance(geometry_coll[i], spg.point.Point):
-            step = [pixel.x == round(
-                geometry_coll[i].x / resolution) * resolution and
-                    pixel.y == round(
-                geometry_coll[i].y / resolution) * resolution
-                    for pixel in geom_pixels]
-        if (isinstance(geometry_coll[i], spg.linestring.LineString)):
+            step = [
+                (
+                        (pixel.x > (geometry_coll[i].x - 0.5 * resolution)) &
+                        (pixel.x <= (geometry_coll[i].x + 0.5 * resolution))
+                ) &
+                (
+                        (pixel.y > (geometry_coll[i].y - 0.5 * resolution)) &
+                        (pixel.y <= (geometry_coll[i].y + 0.5 * resolution))
+                ) for pixel in geom_pixels
+            ]
+
+        if isinstance(geometry_coll[i], spg.linestring.LineString):
             step = [pixel.within(geometry_coll[i].buffer(float(resolution)))
                     for pixel in geom_pixels]
+        print('The process is running: {}% completed'.format(
+            (round(100 * i / len(geometry_coll), 2))))
         within_list.append(step)
-
-    len(within_list[0])
-
-    # check for geometry attribute
-    for i in range(0, len(geometry_coll)):
-        print("Geometry {} contains attribute value: {}".format(i, np.unique(
-            within_list[i])[-1]))
 
     # join separate within_list 's. If overlapping: add attribute values
     for i in range(1, len(geometry_coll)):
@@ -98,34 +140,31 @@ def rasterizer(
             within_list[0][j] = within_list[0][j] + within_list[i][j]
 
     # write in single list
-    within_list_sum = within_list[0]  # type: Union[Union[List[bool], List[Union[bool, Any]]], Any]
+    within_list_sum = within_list[0]
 
-    ## set radiometric resolution to 8bit
+    # set radiometric resolution to 8bit
     within_list_sum = np.round_(
         255 * (np.true_divide(within_list_sum, max(within_list_sum))))
 
-    # check for geometry attributes
-    print("Attribute values of geometries: ", np.unique(within_list_sum))
-
     # create sublists every nth step
     size = len(geom_x[1, :])
-    within_list_sub = []
-    for i in range(0, len(within_list_sum), size):
-        within_list_sub.append(within_list_sum[i:i + size])
+    within_list_sub = [within_list_sum[i:i + size] for i in
+                       range(0, len(within_list_sum), size)]
 
     # create numpy array from the prepared list
     within_array = np.array(within_list_sub, dtype='uint8')
 
     # flip array for correct presentation
     flipped_array = np.flipud(within_array)
-    # plt.imshow(flipped_array, plt.cm.gray)
-    # plt.show()
 
-    ##write image data to tiff file
-    sk.external.tifffile.imsave(outputname, flipped_array)
+    if preview:
+        plt.imshow(flipped_array, plt.cm.gray)
+        plt.show()
 
+    if save:
+        os.chdir(input(
+            "Please enter the path where the .tiff file should be saved: "))
 
-#rasterizer()
-rasterizer(filepath="../test_lines/tst_lines.shp",
-           pixels=100,
-           outputname="tst_lines1.tiff")
+        # write image data to tiff file
+        sk.external.tifffile.imsave(outputname, flipped_array)
+        print('The file is successfully saved')
