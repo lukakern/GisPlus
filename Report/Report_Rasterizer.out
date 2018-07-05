@@ -1,6 +1,8 @@
-\BOOKMARK [1][-]{section.1}{Task}{}% 1
-\BOOKMARK [2][-]{subsection.1.1}{R Code}{section.1}% 2
-\BOOKMARK [1][-]{section.2}{Issues}{}% 3
-\BOOKMARK [2][-]{subsection.2.1}{Solved}{section.2}% 4
-\BOOKMARK [2][-]{subsection.2.2}{Unsolved}{section.2}% 5
-\BOOKMARK [1][-]{section.3}{Conclusion}{}% 6
+\BOOKMARK [1][-]{section.1}{Aim of the Project}{}% 1
+\BOOKMARK [1][-]{section.2}{Structure of the function}{}% 2
+\BOOKMARK [2][-]{subsection.2.1}{Load in the shapefile}{section.2}% 3
+\BOOKMARK [2][-]{subsection.2.2}{Defining the bounding box}{section.2}% 4
+\BOOKMARK [2][-]{subsection.2.3}{R Code}{section.2}% 5
+\BOOKMARK [1][-]{section.3}{Issues}{}% 6
+\BOOKMARK [2][-]{subsection.3.1}{Solved}{section.3}% 7
+\BOOKMARK [2][-]{subsection.3.2}{Unsolved}{section.3}% 8
