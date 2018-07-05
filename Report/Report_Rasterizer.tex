@@ -1,0 +1,376 @@
+\documentclass[10pt, a4paper]{article}
+
+\usepackage{graphicx} 
+\usepackage{natbib}
+\bibpunct{(}{)}{;}{a}{}{,}  % to adjust punctuation in references
+\usepackage[utf8]{inputenc}
+\usepackage[margin=10pt, font=small, labelfont=bf]{caption} 
+\usepackage[margin=1in]{geometry}
+\usepackage{color}
+\usepackage{xcolor}
+\usepackage[]{hyperref}
+\definecolor{darkblue}{rgb}{0,0,.5}
+\hypersetup{colorlinks=true, breaklinks=true, linkcolor=darkblue, menucolor=darkblue, urlcolor=darkblue, citecolor=darkblue}
+\usepackage{multicol}              
+\usepackage{multirow}
+\usepackage{booktabs}  
+\usepackage{enumerate}
+\usepackage{subcaption}
+\usepackage{eurosym}
+\usepackage{color}
+\usepackage{siunitx}
+\usepackage{lineno} % for line numbers 
+\usepackage{setspace}
+%\usepackage{float}
+\usepackage{listings}
+\usepackage{xfrac}
+
+
+\definecolor{middlegray}{rgb}{0.5,0.5,0.5}
+%\definecolor{lightgray}{rgb}{0.8,0.8,0.8}
+\definecolor{orange}{rgb}{0.8,0.3,0.3}
+\definecolor{yac}{rgb}{0.6,0.6,0.1}
+
+\lstset{
+	basicstyle=\small\ttfamily,
+	keywordstyle=\bfseries\ttfamily\color{orange},
+	stringstyle=\color{blue}\ttfamily,
+	commentstyle=\color{teal}\ttfamily,
+	emph={square}, 
+	emphstyle=\color{blue}\texttt,
+	emph={[2]root,base},
+	emphstyle={[2]\color{yac}\texttt},
+	showstringspaces=false,
+	flexiblecolumns=false,
+	tabsize=2,
+	xleftmargin=5pt
+}
+
+
+\setlength\parindent{0pt}
+
+\begin{document}
+
+\markboth{}
+\\\noindent University of Freiburg \hspace{9cm}  February 17, 2018
+\\Faculty of Environment and Natural Resources
+\\Module: Numerical Modelling of Processes
+\\Lecturer: Dr. Helmer Schack-Kirchner
+\\Authors: Victoria Kolodziej and Felix Rentschler
+\\
+
+\begin{center}
+	\huge{Project 5} \vspace{0.5cm}\\
+	\Large {Ordinary Differential Equation: Litter and Soil Organic Matter}
+\end{center}
+
+%\maketitle
+\onehalfspacing % larger vertical space between lines 
+%\linenumbers
+
+\section{Problem}
+%Begin with a paragraph "Problem" where you explain some backgrounds of the model. You should cite some literature.
+
+During the last 20 years models have been widely used to improve the understanding of soil organic matter (SOM) dynamics. The use of such models is always a strong simplification of the complex reality but they are needed for a more detailed understanding of the soil organic carbon balance and nutrients dynamics. The simulations help to evaluate the long-term effects of climate and management practices in different land use situations on a landscape scale. Furthermore, they promote a better understanding of the distribution and dynamics of global C balances by quantifying regional data. (\textsc{Di Tizio A., Grego S. 2008})
+\\
+Because the measurement of carbon stocks is difficult to do in practice, they can often only be described by using mathematical models. Two very common examples are the Rothham-C and Century model, that were initially developed for agricultural floors. (\textsc{NW-FVA, 2013}) 
+\\
+In our project we use an ordinary differential equation model to do simulations on 3 different biomes. We calculate values for a boreal coniferous forest,  a temperate decidous forest and a tropical rain forest. 
+Figure 1 gives an overview about the given pools, fluxes and parameters that are used. 
+
+
+\begin{figure}[!htbp]
+	\centering
+%	\includegraphics[width=12cm]{model.png}
+	\caption{Litter and soil organic carbon model}
+\end{figure}
+
+We calculate the moment in time when the equilibrium for the 3 different biomes is found respectively. Furthermore, annual fluctuations and the influence of a wild fire will be simulated.  
+
+
+\section{Material and methods}
+%"Material and methods" is mainly your extensively commented R-Code. Include source of constants and process variables. It is better to present readable code instead of a  highly abstract compact version. That makes it easier for me to see, that you have understood, what you are writing. Clearly, I also like good technical ideas!
+
+Initial values are needed to start the simulation of the model. Therefore the soil carbon values from Table 1 are used. 
+%Because we want to approximate the soil organic matter stocks for all three biomes we calculate with .  
+We assume that we have a specific ratio in an equilibrium state of the carbon stock. In boreal forests we find \sfrac{2}{3} of the carbon in the fresh litter and \sfrac{1}{3} in the soil.  For temperate and tropical forests we have a different ratio with less carbon in litter. Here the carbon in litter is \sfrac{1}{10} and the carbon in soil \sfrac{9}{10}. 
+
+
+\begin{table}[htbp!]
+	\begin{center}
+		\caption{Carbon values for different biomes after \textsc{v.Cleve \& Powers 1995}}
+		\label{}
+		\begin{tabular}{l r r} % <-- Changed to S here.
+			\textbf{Biome}& \textbf{carbon in litter} & \textbf{carbon in soil}\\
+								   & $Mg\ ha^{-1}\ year^{-1}$& $Mg\ ha^{-1}$\\\\
+								   
+			boreal forest & 4 & 149\\
+			temperate forest& 22 & 139\\
+			tropical rain forest& 34 & 104\\
+		\end{tabular}
+	\end{center}
+\end{table}
+
+The litterfall parameters for the three biomes have been set to 10, 16 and 30 $to/ha/year$. As we know, the conversion from dry mass to carbon is calculated by the factor of 0.5. Therefore, the parameter litterfall is defined as 5, 8 and 15 $to/ha/year$ of carbon. 
+
+\subsection{R Code}
+\begin{lstlisting}[language=R]
+#=============================================================================
+#                       Initial Values
+#=============================================================================
+library(deSolve)
+#Data frame: equilibrium values, based on Data Cleve & Powers, 1995:
+df <- data.frame(biome=c("boreal","temperate","tropical"),
+							 	 litter_C=c(149*(2/3),139*0.1,104*0.1),
+								 SOC=c(149*(1/3),139*0.9,104*0.9))
+litterfall= c(5,8,15) #t/ha/year
+
+propfac <- 1 # proportion between humification and mineralisation  
+#assumption: both are more or less the same
+
+#Approximation of humification rate, primary and secundary mineralisation 
+#rate (all in t/ha C)
+
+RateHum <- - (litterfall/(df$litter_C/(1+propfac)))  
+PriMin <- RateHum*propfac
+SecMin <- (RateHum*df$litter_C)/df$SOC
+
+# Calculated with: 
+#  0 = -litterinput+Litter*humification + Litter * mineraLit 
+#  0 = Litter* -humification + Humus * mineraHum
+#  multiplied with a factor to reach the correct equilibrium state
+SecMin <- SecMin*0.25
+PriMin <- PriMin*0.25
+RateHum <- RateHum *0.25
+
+#=============================================================================
+#                 ODE Model: C stock in litter and humus over 200 years
+#=============================================================================
+# Is a simplified model for calculating the equilibrium of litter and humus 
+# without considering annual fluctuations
+
+#----------------------Parameters needed for the function----------------
+
+time.years <- seq(1,200,1)  #time sequence of 200 years
+status<-c(Litter=0,Humus=0) #initial status: no litter and humus 
+
+para01 <- list(time,litterfall[1],RateHum[1],PriMin[1],SecMin[1])
+para02 <- list(time,litterfall[2],RateHum[2],PriMin[2],SecMin[2])
+para03 <- list(time,litterfall[3],RateHum[3],PriMin[3],SecMin[3])
+
+#----------------------function in ODE form------------------------------
+SOM_equilibrium<-function(t,y,param){ #function in ode-Form
+Litter<-y[1]
+Humus<-y[2]
+litterinput<-  param[[2]]
+humification<- param[[3]]
+mineraLit<-    param[[4]]
+mineraHum<-    param[[5]]
+
+dLitter<-litterinput+Litter*humification + Litter * mineraLit
+dHumus<-Litter* -humification + Humus * mineraHum
+
+return(list(c(dLitter,dHumus)))
+}
+
+#-------------------applying the function---------------------------------
+erg1<-ode(y=status,times=time.years,func=SOM_equilibrium,parms=para01)
+erg2<-ode(y=status,times=time.years,func=SOM_equilibrium,parms=para02)
+erg3<-ode(y=status,times=time.years,func=SOM_equilibrium,parms=para03)
+
+plot(erg1, ylab="t/ha")
+mtext("Boreal Forest",at=-55,line=2,cex=2)
+plot(erg3)
+plot(erg3[,1],erg3[,2], type="l")
+abline(v=6)
+
+erg1[200,]
+erg2[200,]
+erg3[200,]
+\end{lstlisting}
+\newpage
+
+\begin{lstlisting}[language=R]
+#------------------When is an equilibrium reached?----------------------
+
+which(diff(erg1[,2])<0.01)[1] #Litter: after 124 years
+which(diff(erg1[,3])<0.01)[1] #Humus: after 151 years
+
+which(diff(erg2[,2])<0.01)[1] #Litter: after 13 years
+which(diff(erg2[,3])<0.01)[1] #Humus: after 190 years
+
+which(diff(erg3[,2])<0.01)[1] #Litter: after 6 years
+which(diff(erg3[,3])<0.01)[1] #Humus: 84 years
+
+#------------------ plot: 200 years timeline-----------------------------
+
+plot(erg1[,1], erg1[,2], xlim=c(0,200), ylim=c(0,105), main="Litter", 
+		 xlab="year", ylab="t/ha C", type="l",lwd=2,col="purple4")
+lines(erg2[,1],erg2[,2],col="darkcyan",lwd=2)
+lines(erg3[,1],erg3[,2],col="darkgoldenrod", lwd=2)
+abline(v=c(124,13,6),lty=5,lwd=1 ,col=c("purple4","darkcyan","darkgoldenrod")) 
+#equilibrium
+
+
+#=============================================================================
+#                   ODE Model with annual fluctuations
+#=============================================================================
+
+Q10<- c(3.3,3.8,0) #Q10 values according to vesterdal et.al. (2011): 
+# for boreal Q10 of spruce, for temperate Q10 of beech; 
+# tropical has no seasonal temperature variation
+
+littervariation <- c(TRUE,TRUE,FALSE) 
+#boreal and temperate forest have varying litterfall, tropical forest not
+
+#------------------- function---------------------------------------------
+SOM_annual<-function(t,state,param){ #function in ode-form
+Litter<-state[1]
+Humus<-state[2]
+litterinput<-  param[[2]]
+humification<- param[[3]]
+mineraLit<-    param[[4]]
+mineraHum<-    param[[5]]
+Q10 <- param[[6]]
+littervariation <- param[[7]]
+if(littervariation == TRUE){
+litterinput<- (abs(sin((2*pi)*(t)))-sin((2*pi)*(t)))*(litterinput/0.636) 
+#litterfall in autumn, 0.636 is the approx. mean of this sin function
+}
+tempfac<- sin((2*pi)*t+0.75) * Q10 + 1 #temperature dependency
+dLitter<-litterinput+Litter*humification*tempfac + Litter * mineraLit*tempfac
+dHumus<-Litter* -humification*tempfac + Humus * mineraHum*tempfac
+return(list(c(dLitter,dHumus)))
+}
+
+#------------------ parameter lists with the new parameters -----------------
+para1 <- list(time,litterfall[1],RateHum[1],PriMin[1],SecMin[1],Q10[1],
+							littervariation[1])
+para2 <- list(time,litterfall[2],RateHum[2],PriMin[2],SecMin[2],Q10[2],
+							littervariation[2])
+para3 <- list(time,litterfall[3],RateHum[3],PriMin[3],SecMin[3],Q10[3],
+							littervariation[3])
+
+#------------------ applying the function------------------------------------
+m.erg1<-ode(y=status,times=seq(0,200,(1/12)),func=SOM_annual,parms=para1)
+m.erg2<-ode(y=status,times=seq(0,200,(1/12)),func=SOM_annual,parms=para2)
+m.erg3<-ode(y=status,times=seq(0,200,(1/12)),func=SOM_annual,parms=para3)
+
+plot(m.erg1, xlim=c(0,10))
+plot(m.erg2, xlim=c(0,10))
+plot(m.erg3, xlim=c(0,10))
+
+#--------------------plot: zoomed in for the first 10 years----------------
+
+plot(m.erg1[,1], m.erg1[,2], xlim=c(0,10), ylim=c(0,60), main="Litter",
+			xlab="year", ylab="t/ha C", type="l",lwd=2,col="purple4")
+lines(m.erg2[,1],m.erg2[,2],col="darkcyan",lwd=2)
+lines(m.erg3[,1],m.erg3[,2],col="darkgoldenrod", lwd=3)
+legend("topleft", lwd=2,lty=1,legend=c("boreal","temperate","tropical"),
+			col=c("purple4","darkcyan","darkgoldenrod"), bty="n")
+
+plot(m.erg1[,1], m.erg1[,3], xlim=c(0,10), ylim=c(0,60), main="Humus",
+			xlab="time", ylab="t/ha C", type="l",lwd=2, col="purple4")
+lines(m.erg2[,1],m.erg2[,3],col="darkcyan",lwd=2)
+lines(m.erg3[,1],m.erg3[,3],col="darkgoldenrod", lwd=3, lty=2)
+legend("topleft", lwd=2,lty=1,legend=c("boreal","temperate","tropical"),
+			col=c("purple4","darkcyan","darkgoldenrod"), bty="n")
+
+
+#=============================================================================
+#                     Simulating a wildfire
+#=============================================================================
+#In equilibrium state: 90 percent of litter is burned during a fire event 
+fire.erg1<-ode(y=c(Litter=10, Humus=49.6),times=seq(0,200,(1/12)),
+								func=SOM_annual,parms=para1)
+fire.erg2<-ode(y=c(Litter=1.4, Humus=125),times=seq(0,200,(1/12)),
+								func=SOM_annual,parms=para2)
+fire.erg3<-ode(y=c(Litter=1, Humus=93),times=seq(0,200,(1/12)),
+								func=SOM_annual,parms=para3)
+
+
+#------------------plot: 50 years after fire event------------------------
+par(mfrow=c(2,1))
+plot(fire.erg1, xlim=c(0,50), col="darkred",xlab="years",ylab="t/ha C")
+#15-100, 30-50
+
+
+\end{lstlisting}
+
+
+\newpage
+\section{Results}
+%"Results": Nice graphics and tables with correct captions with explanatory content.
+
+	 	 	 	 	
+To find out, how much time is needed to reach the equilibrium state of the carbon stock in litter and humus, the first model was run for 200 years. The results are listed in Table 2.  Figure 2 visualizes the development of both stocks over the years. The vertical lines mark the attainment of the equilibrium state. For temperate and tropical forests, the litter stock reaches its final state very fast. Because the humification and primary mineralisation rate of boreal forests are very small, the time is much longer. In general, the curves of the humus development are less steep. Tropical forests have the highest flux rates and reach the equilibrium first. Temperate forests often have deep humus layers. In our model, it needs almost 200 years to reach the final state of the carbon stored in humus.\\
+
+\begin{table}[htbp!]
+	\begin{center}
+		\caption{Year where equilibrium state is reached}
+		\label{tab:table1}
+		\begin{tabular}{l r r} % <-- Changed to S here.
+			\textbf{Biome}& \textbf{Litter} & \textbf{Humus}\\
+			boreal forest & 124 & 151\\
+			temperate forest& 13 & 190\\
+			tropical rain forest& 6 & 84\\
+		\end{tabular}
+	\end{center}
+\end{table}\
+
+\begin{figure}[!htbp]
+	\centering
+%	\includegraphics[width=16cm]{Litter_Humus_200yrs_geinkscaped.png}
+	\caption{Equilibrium states of carbon stocks in litter and humus}
+\end{figure}
+
+Figure 3 shows the development of the carbon stock for the first ten years, including the annual fluctuations. At the beginning, the litter stock in boreal and temperate forests is zero and increases fastly to the end of the first year due to the litterfall in autumn. In temperate forests, the fluctuations within the year are highest. Tropical rainforests are not influenced by annual seasons. \newpage
+
+\begin{figure}[!htbp]
+	\centering
+%	\includegraphics[width=16cm]{Litter_Humus_10yrs.png}
+	\caption{Development of litter and soil organic matter for 3 different biomes over 10 years with annual fluctuations}
+\end{figure}
+
+The effect of a wildfire event on the carbon stocks of boreal forest is visualized in Figure 4. Because of the burning the fresh litter is decreased by \SI{90}{\%}. The carbon litter stock is built up continuously over the next decades, whereas the wildfire effect on the carbon humus stock is delayed. The biggest carbon loss in humus occurs after 20 years. 
+
+\begin{figure}[!htbp]
+	\centering
+%	\includegraphics[width=16cm]{wildfire.png}
+	\caption{Wildfire event in a boreal forest}
+\end{figure}
+\newpage
+\section{Conclusion}
+%"Conclusions": Half a page with some judgements about performance, quality, and scientific value of the model.
+
+As \textsc{NW-FVA 2013} described, the presence of too many, influential and calibration prone parameters can be a disadvantage in the general applicability and portability of a model. 
+
+The model works with few parameters and a compact size of programming code. Therefore, it is a fast way to simulate the development of organic carbon in soils in a simplified, but reasonable way. The model tries to avoid processes that can slow down the performance of the simulation (e.g. loops).
+If further parameters are needed in the model, they can easily be included. The model can be used to simulate changes in the carbon stock, like the wildfire event, and can be adjusted if necessary. \\
+
+The annual fluctuations in the model were simulated by a sinoidal curve that does not cover the exact time of litterfall during one year. At the current state, the model is not designed for more complex annual and interannual variations of the parameters.
+
+
+
+\section{Literature}
+\begin{itemize}
+	\item\textsc{Di Tizio A., Grego S. 2008}. Soil organic carbon balance using Century model. In: Marinari S., Caporali F. (eds). Soil Carbon Sequestration Under Organic Farming in the Mediterranean Environment. 9: p.145-157
+	
+	\item\textsc{NW-FVA 2013}: Beitraege aus der Nordwestdeutschen Forstlichen Versuchsanstalt. Band 10. Waldentwicklungsszenarien fuer das Hessische Ried. p.58 
+	\item\textsc{Vesterdal, et al.} 2011: Soil respiration and rates of soil carbon turnover differ among six common European tree species, Forest Ecology and Management 264 2012 p. 189
+	\item \textsc{V. Cleve  \& Powers} 1995: Soil Carbon, Soil Formation and Ecosystem Development
+\end{itemize}
+%\vspace{3cm}
+\appendix
+\section{Declaration of Authorship}
+\begin{itemize}
+	\item Introduction: F.R.
+	\item Results: Describing Figure 2 + 3 V.K., Figure 4: F.R.
+	\item General development of model and code: V.K. and F.R.
+	\item Annual fluctuation in the function: V.K.
+	\item Conclusion: F.R. and V.K.
+\end{itemize}
+
+
+
+\end{document}
