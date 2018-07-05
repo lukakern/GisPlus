@@ -25,6 +25,7 @@
 \usepackage{listings}
 \usepackage{xfrac}
 \usepackage[T1]{fontenc}
+\usepackage{python}
 
 
 %\definecolor{middlegray}{rgb}{0.5,0.5,0.5}
@@ -109,35 +110,8 @@ To load in the shapefile, the fiona-package is used. Every geometry-object of th
 \subsection{Defining the bounding box}
 We create a buffer around the actual shape of the shapefile which will look prettier in the resulting image. 
 
-\newpage
-% Python environment
-\lstnewenvironment{python}[1][]
-{
-	\pythonstyle
-	\lstset{#1}
-}
-{}
 
 
-\begin{python}
-class MyClass(Yourclass):
-		def __init__(self, my, yours):
-		bla = '5 1 2 3 4'
-		print bla
-\end{python}
-\subsection{R Code}
-\begin{lstlisting}[language=Python]
-#=============================================================================
-#                       Initial Values
-#=============================================================================
-def rasterizer(filepath,
-							pixels=100,
-						buffer=10,
-outputname="output.tiff",
-save=True,
-preview=True):
-
-\end{lstlisting}
 
 
 \section{Issues}

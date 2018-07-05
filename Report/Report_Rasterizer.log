@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017) (preloaded format=pdflatex 2017.6.20)  5 JUL 2018 13:42
+This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017) (preloaded format=pdflatex 2017.10.26)  5 JUL 2018 14:31
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1185,7 +1185,12 @@ Package: fontenc 2017/04/05 v2.0i Standard LaTeX package
 File: t1enc.def 2017/04/05 v2.0i Standard LaTeX file
 LaTeX Font Info:    Redeclaring font encoding T1 on input line 48.
 ))
-LaTeX Font Info:    Try loading font information for T1+txtt on input line 50.
+(/usr/local/texlive/2017/texmf-dist/tex/latex/python/python.sty
+Package: python 2007/06/07 v0.21 Python in LaTeX
+\@out=\write3
+\@module=\write4
+)
+LaTeX Font Info:    Try loading font information for T1+txtt on input line 51.
 
 (/usr/local/texlive/2017/texmf-dist/tex/latex/txfonts/t1txtt.fd
 File: t1txtt.fd 2000/12/15 v3.1
@@ -1193,27 +1198,27 @@ File: t1txtt.fd 2000/12/15 v3.1
 (./Report_Rasterizer.aux)
 \openout1 = `Report_Rasterizer.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 73.
-LaTeX Font Info:    ... okay on input line 73.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 73.
-LaTeX Font Info:    ... okay on input line 73.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 73.
-LaTeX Font Info:    ... okay on input line 73.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 73.
-LaTeX Font Info:    ... okay on input line 73.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 73.
-LaTeX Font Info:    ... okay on input line 73.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 73.
-LaTeX Font Info:    ... okay on input line 73.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 73.
-LaTeX Font Info:    ... okay on input line 73.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 73.
-LaTeX Font Info:    Try loading font information for TS1+cmr on input line 73.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 74.
+LaTeX Font Info:    ... okay on input line 74.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 74.
+LaTeX Font Info:    ... okay on input line 74.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 74.
+LaTeX Font Info:    ... okay on input line 74.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 74.
+LaTeX Font Info:    ... okay on input line 74.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 74.
+LaTeX Font Info:    ... okay on input line 74.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 74.
+LaTeX Font Info:    ... okay on input line 74.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 74.
+LaTeX Font Info:    ... okay on input line 74.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 74.
+LaTeX Font Info:    Try loading font information for TS1+cmr on input line 74.
 
 (/usr/local/texlive/2017/texmf-dist/tex/latex/base/ts1cmr.fd
 File: ts1cmr.fd 2014/09/29 v2.5h Standard LaTeX font definitions
 )
-LaTeX Font Info:    ... okay on input line 73.
+LaTeX Font Info:    ... okay on input line 74.
 
 (/usr/local/texlive/2017/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
@@ -1285,7 +1290,7 @@ Package caption Info: End \AtBeginDocument code.
 * (1in=72.27pt=25.4mm, 1cm=28.453pt)
 
 \AtBeginShipoutBox=\box82
-Package hyperref Info: Link coloring ON on input line 73.
+Package hyperref Info: Link coloring ON on input line 74.
 (/usr/local/texlive/2017/texmf-dist/tex/latex/hyperref/nameref.sty
 Package: nameref 2016/05/21 v2.44 Cross-referencing by name of section
 
@@ -1294,13 +1299,13 @@ Package: gettitlestring 2016/05/16 v1.5 Cleanup title references (HO)
 )
 \c@section@level=\count199
 )
-LaTeX Info: Redefining \ref on input line 73.
-LaTeX Info: Redefining \pageref on input line 73.
-LaTeX Info: Redefining \nameref on input line 73.
+LaTeX Info: Redefining \ref on input line 74.
+LaTeX Info: Redefining \pageref on input line 74.
+LaTeX Info: Redefining \nameref on input line 74.
 
 (./Report_Rasterizer.out) (./Report_Rasterizer.out)
-\@outlinefile=\write3
-\openout3 = `Report_Rasterizer.out'.
+\@outlinefile=\write5
+\openout5 = `Report_Rasterizer.out'.
 
 
 (/usr/local/texlive/2017/texmf-dist/tex/latex/beamer/translator/dicts/translato
@@ -1313,63 +1318,47 @@ File: siunitx-abbreviations.cfg 2017/05/19 v2.7g siunitx: Abbreviated units
 \c@lstlisting=\count266
 \c__siunitx_mathsf_int=\count267
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <7> on input line 73.
+(Font)              <7> on input line 74.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <5> on input line 73.
+(Font)              <5> on input line 74.
 \c__siunitx_mathtt_int=\count268
 
-Underfull \hbox (badness 10000) in paragraph at lines 76--82
+Underfull \hbox (badness 10000) in paragraph at lines 77--83
 
  []
 
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 132.
 [1
 
 {/usr/local/texlive/2017/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]
-(/usr/local/texlive/2017/texmf-dist/tex/latex/listings/lstlang1.sty
-File: lstlang1.sty 2015/06/04 1.6 listings language file
-)
-Overfull \hbox (14.92142pt too wide) in paragraph at lines 129--130
-[][][][][] 
- []
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 132.
 
-
-Overfull \hbox (14.92142pt too wide) in paragraph at lines 131--132
-[][][][][] 
- []
-
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 157.
-[2]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 157.
- (./Report_Rasterizer.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 157.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 157.
+(./Report_Rasterizer.aux)
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 132.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 132.
 Package rerunfilecheck Info: File `Report_Rasterizer.out' has not changed.
-(rerunfilecheck)             Checksum: 405EDB35D5E37001F651728FE13C15BF;465.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 157.
+(rerunfilecheck)             Checksum: C6ACFA827BEC25AAF92729F7939AA9D7;410.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 132.
  ) 
 Here is how much of TeX's memory you used:
- 20736 strings out of 492995
- 381576 string characters out of 6132704
- 448497 words of memory out of 5000000
- 24076 multiletter control sequences out of 15000+600000
- 13327 words of font info for 32 fonts, out of 8000000 for 9000
+ 20241 strings out of 492995
+ 377021 string characters out of 6132703
+ 429323 words of memory out of 5000000
+ 23600 multiletter control sequences out of 15000+600000
+ 11865 words of font info for 30 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 36i,5n,41p,10406b,1315s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 36i,5n,38p,10406b,715s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/local/texlive/2017/texmf-dist/fonts/enc/dvips/cm-super/cm-super-t1.enc}
 </usr/local/texlive/2017/texmf-dist/fonts/type1/public/cm-super/sfbx0900.pfb></
-usr/local/texlive/2017/texmf-dist/fonts/type1/public/cm-super/sfbx1000.pfb></us
-r/local/texlive/2017/texmf-dist/fonts/type1/public/cm-super/sfbx1200.pfb></usr/
-local/texlive/2017/texmf-dist/fonts/type1/public/cm-super/sfbx1440.pfb></usr/lo
-cal/texlive/2017/texmf-dist/fonts/type1/public/cm-super/sfrm0900.pfb></usr/loca
-l/texlive/2017/texmf-dist/fonts/type1/public/cm-super/sfrm1000.pfb></usr/local/
-texlive/2017/texmf-dist/fonts/type1/public/cm-super/sfrm2074.pfb></usr/local/te
-xlive/2017/texmf-dist/fonts/type1/public/cm-super/sfti1000.pfb></usr/local/texl
-ive/2017/texmf-dist/fonts/type1/public/txfonts/t1xbtt.pfb></usr/local/texlive/2
-017/texmf-dist/fonts/type1/public/txfonts/t1xtt.pfb>
-Output written on Report_Rasterizer.pdf (2 pages, 135662 bytes).
+usr/local/texlive/2017/texmf-dist/fonts/type1/public/cm-super/sfbx1200.pfb></us
+r/local/texlive/2017/texmf-dist/fonts/type1/public/cm-super/sfbx1440.pfb></usr/
+local/texlive/2017/texmf-dist/fonts/type1/public/cm-super/sfrm0900.pfb></usr/lo
+cal/texlive/2017/texmf-dist/fonts/type1/public/cm-super/sfrm1000.pfb></usr/loca
+l/texlive/2017/texmf-dist/fonts/type1/public/cm-super/sfrm2074.pfb>
+Output written on Report_Rasterizer.pdf (1 page, 99485 bytes).
 PDF statistics:
- 112 PDF objects out of 1000 (max. 8388607)
- 97 compressed objects within 1 object stream
- 27 named destinations out of 1000 (max. 500000)
- 65 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 70 PDF objects out of 1000 (max. 8388607)
+ 60 compressed objects within 1 object stream
+ 10 named destinations out of 1000 (max. 500000)
+ 57 words of extra memory for PDF output out of 10000 (max. 10000000)
 
