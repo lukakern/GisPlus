@@ -77,6 +77,7 @@ def rasterizer(filepath,
         [shape(pol['geometry']) for pol in fiona.open(filepath)]
     )
 
+
     # cornerstones of bounding box
     bbox = geometry_coll.bounds
 
