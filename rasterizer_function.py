@@ -1,17 +1,13 @@
 # -*- encoding: utf-8 -*-
 """Summary of script
-
 This script is about the rasterizer function:
-
 The function creates a raster file (.tiff) from a given shape file.
-
 To do so the function collects the geometries defines a bounding box
 around them. Within the bounding box a regular grid is generated and
 points are created representing the grid cells. Then it is checked if
 the grid cell/point lies within the given geometry. The boolean result
 is transformed to a numpy array with a radiometric resolution of 8 bit.
 This numpy array is then saved as a .tiff file.
-
 """
 
 import shapely.geometry as spg
@@ -21,8 +17,6 @@ import matplotlib.pyplot as plt
 import fiona
 import skimage as sk
 import os
-import gdal
-import osr
 
 
 def rasterizer(filepath,
@@ -33,35 +27,25 @@ def rasterizer(filepath,
                preview=True):
 
     """rasterizer function
-
     This function creates a raster file (.tiff) from a given shape file.
-
     To do so the function collects the geometries defines a bounding box
     around them. Within the bounding box a regular grid is generated and
     points are created representing the grid cells. Then it is checked if
     the grid cell/point lies within the given geometry. The boolean result
     is transformed to a numpy array with a radiometric resolution of 8 bit.
     This numpy array is then saved as a .tiff file.
-
     Example usage
     -------------
-
     rasterizer(filepath="/Users/Documents/test_polygons",
                pixels=100,
                buffer=10,
                outputname="polygons_output.tiff",
                save=True,
                preview=True)
-
     >> The process is running: 100% completed
-
     >> Please enter the path to the direction where the .tiff file should be
     saved: /Users/Documents/results
-
     >> The file is successfully saved
-
-
-
     Parameters
     ----------
     :param filepath: string
@@ -78,6 +62,8 @@ def rasterizer(filepath,
     geometry_coll = spg.collection.GeometryCollection(
         [shape(pol['geometry']) for pol in fiona.open(filepath)]
     )
+
+
     # cornerstones of bounding box
     bbox = geometry_coll.bounds
 
@@ -112,14 +98,10 @@ def rasterizer(filepath,
 
     # check if the pixel/point lies within one of the geometries (separately)
     within_list = []
-    if isinstance(geometry_coll[0], spg.polygon.Polygon):
-        for i in range(0, len(geometry_coll)):
+    for i in range(0, len(geometry_coll)):
+        if isinstance(geometry_coll[i], spg.polygon.Polygon):
             step = [pixel.within(geometry_coll[i]) for pixel in geom_pixels]
-            print("The process is running: {} % completed ".format(
-                str(round(100 * i / len(geometry_coll), 2))))
-            within_list.append(step)
-    if isinstance(geometry_coll[0], spg.point.Point):
-        for i in range(0, len(geometry_coll)):
+        if isinstance(geometry_coll[i], spg.point.Point):
             step = [
                 (
                         (pixel.x > (geometry_coll[i].x - 0.5 * resolution)) &
@@ -131,16 +113,12 @@ def rasterizer(filepath,
                 ) for pixel in geom_pixels
             ]
 
-            print("The process is running: {} % completed ".format(
-                str(round(100 * i / len(geometry_coll), 2))))
-            within_list.append(step)
-    if isinstance(geometry_coll[0], spg.linestring.LineString):
-        for i in range(0, len(geometry_coll)):
+        if isinstance(geometry_coll[i], spg.linestring.LineString):
             step = [pixel.within(geometry_coll[i].buffer(float(resolution)))
                     for pixel in geom_pixels]
-            print("The process is running: {} % completed ".format(
-                str(round(100 * i / len(geometry_coll), 2))))
-            within_list.append(step)
+        print('The process is running: {}% completed'.format(
+            (round(100 * i / len(geometry_coll), 2))))
+        within_list.append(step)
 
     # join separate within_list 's. If overlapping: add attribute values
     for i in range(1, len(geometry_coll)):
@@ -173,32 +151,6 @@ def rasterizer(filepath,
         os.chdir(input(
             "Please enter the path where the .tiff file should be saved: "))
 
-    # write image data to tiff file
-    sk.external.tifffile.imsave(outputname, flipped_array)
-    print('The file is successfully saved')
-
-    '''
-
-    driver = gdal.GetDriverByName("GTiff")
-    outRaster = driver.Create(outputname, x_range+2*buffer, y_range+2*buffer, 1,
-                              gdal.GDT_Float32)  # gdal braucht Float32
-    #outRaster.SetGeoTransform(geotransform)
-    outRasterSRS = osr.SpatialReference()  # source for spatialreference - object
-    #outRasterSRS.ImportFromEPSG(EPSG)
-    outRaster.SetProjection(
-        outRasterSRS.ExportToWkt())  # takes SRS and puts it inside our canvas
-
-     # in gdal objects we start with 1, thats why we have to write bads +1
-    outRaster.GetRasterBand(1).WriteArray(flipped_array)
-    outRaster.FlushCache()  ## save the image
-    outRaster = None  ## release t
-    '''
-
-
-#rasterizer()
-rasterizer(filepath="../test_lines/tst_lines.shp",
-           pixels=100,
-           buffer = 5,
-           outputname="lines_geotiff.tiff",
-           preview=False)
-
+        # write image data to tiff file
+        sk.external.tifffile.imsave(outputname, flipped_array)
+        print('The file is successfully saved')
