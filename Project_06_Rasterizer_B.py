@@ -9,9 +9,20 @@ import matplotlib.pyplot as plt
 from matplotlib.patches import Polygon as mplPolygon
 import gdal
 
+<<<<<<< HEAD
+
+
+
+'''
+Test Polygon
+'''
+#create random polygon geometry
+np.random.seed(None)
+=======
 attributes = [np.random.randint(0, 100) for i in range(0, 3)]
 
 np.random.seed(1234)
+>>>>>>> 144c0a3c5edfef0bc27e0e9316653c68546c3463
 geometry_coll = spg.collection.GeometryCollection(
     [spg.MultiPoint(
         [spg.Point(_) for _ in np.random.gamma(mid, 3, (15, 2))]
