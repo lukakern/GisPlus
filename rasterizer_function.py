@@ -25,7 +25,7 @@ import os
 
 def rasterizer(filepath,
                pixels=100,
-               buffer=10,
+               buffer=0,
                outputname="output.tiff",
                save=True,
                preview=True):
@@ -110,61 +110,70 @@ def rasterizer(filepath,
         for j in range(0, len(geom_y[1, :])):
             geom_pixels.append(spg.Point([geom_x[i, j], geom_y[i, j]]))
 
-    # check if the pixel/point lies within one of the geometries (separately)
-    within_list = []
-    for i in range(0, len(geometry_coll)):
-        if isinstance(geometry_coll[i], spg.polygon.Polygon):
-            step = [pixel.within(geometry_coll[i]) for pixel in geom_pixels]
-        if isinstance(geometry_coll[i], spg.point.Point):
-            step = [
-                (
-                        (pixel.x > (geometry_coll[i].x - 0.5 * resolution)) &
-                        (pixel.x <= (geometry_coll[i].x + 0.5 * resolution))
-                ) &
-                (
-                        (pixel.y > (geometry_coll[i].y - 0.5 * resolution)) &
-                        (pixel.y <= (geometry_coll[i].y + 0.5 * resolution))
-                ) for pixel in geom_pixels
-            ]
+        # check if the pixel/point lies within one of the geometries (separately)
+        within_list = []
+        for i in range(0, len(geometry_coll)):
+            if isinstance(geometry_coll[i], spg.polygon.Polygon):
+                step = [pixel.within(geometry_coll[i]) for pixel in
+                        geom_pixels]
+            if isinstance(geometry_coll[i], spg.point.Point):
+                step = [
+                    (
+                            (pixel.x > (geometry_coll[
+                                            i].x - 0.5 * resolution)) &
+                            (pixel.x <= (
+                                        geometry_coll[i].x + 0.5 * resolution))
+                    ) &
+                    (
+                            (pixel.y > (geometry_coll[
+                                            i].y - 0.5 * resolution)) &
+                            (pixel.y <= (
+                                        geometry_coll[i].y + 0.5 * resolution))
+                    ) for pixel in geom_pixels
+                ]
 
-        if isinstance(geometry_coll[i], spg.linestring.LineString):
-            step = [pixel.within(geometry_coll[i].buffer(float(resolution)))
+            if isinstance(geometry_coll[i], spg.linestring.LineString):
+                step = [
+                    pixel.within(geometry_coll[i].buffer(float(resolution)))
                     for pixel in geom_pixels]
-        print('The process is running: {}% completed'.format(
-            (round(100 * i / len(geometry_coll), 2))))
-        within_list.append(step)
+            print('The process is running: {}% completed'.format(
+                (round(100 * i / len(geometry_coll), 2))))
+            within_list.append(step)
 
-    # join separate within_list 's. If overlapping: add attribute values
-    for i in range(1, len(geometry_coll)):
-        for j in range(0, len(within_list[0])):
-            within_list[0][j] = within_list[0][j] + within_list[i][j]
+        # join separate within_list 's. If overlapping: add attribute values
+        for i in range(1, len(geometry_coll)):
+            for j in range(0, len(within_list[0])):
+                within_list[0][j] = within_list[0][j] + within_list[i][j]
 
-    # write in single list
-    within_list_sum = within_list[0]
+        # write in single list
+        within_list_sum = within_list[0]
 
-    # set radiometric resolution to 8bit
-    within_list_sum = np.round_(
-        255 * (np.true_divide(within_list_sum, max(within_list_sum))))
+        # set radiometric resolution to 8bit
+        within_list_sum = np.round_(
+            255 * (np.true_divide(within_list_sum, max(within_list_sum))))
 
-    # create sublists every nth step
-    size = len(geom_x[1, :])
-    within_list_sub = [within_list_sum[i:i + size] for i in
-                       range(0, len(within_list_sum), size)]
+        # create sublists every nth step
+        size = len(geom_x[1, :])
+        within_list_sub = [within_list_sum[i:i + size] for i in
+                           range(0, len(within_list_sum), size)]
 
-    # create numpy array from the prepared list
-    within_array = np.array(within_list_sub, dtype='uint8')
+        # create numpy array from the prepared list
+        within_array = np.array(within_list_sub, dtype='uint8')
 
-    # flip array for correct presentation
-    flipped_array = np.flipud(within_array)
+        # flip array for correct presentation
+        flipped_array = np.flipud(within_array)
 
-    if preview:
-        plt.imshow(flipped_array, plt.cm.gray)
-        plt.show()
+        if preview:
+            plt.imshow(flipped_array, plt.cm.gray)
+            plt.show()
 
-    if save:
-        os.chdir(input(
-            "Please enter the path where the .tiff file should be saved: "))
+        if save:
+            os.chdir(input(
+                "Please enter the path where the .tiff file should be saved: "))
 
-        # write image data to tiff file
-        sk.external.tifffile.imsave(outputname, flipped_array)
-        print('The file is successfully saved')
+            # write image data to tiff file
+            sk.external.tifffile.imsave(outputname, flipped_array)
+            print('The file is successfully saved')
+
+
+rasterizer("../test_lines/tst_lines.shp")

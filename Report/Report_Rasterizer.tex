@@ -70,6 +70,10 @@
 
 \setlength\parindent{0pt}
 
+
+
+
+
 \begin{document}
 
 \markboth{}
@@ -106,8 +110,13 @@ For the case that no shapefile is available to run the function, a code to gener
 \subsection{Load in the shapefile}
 To load in the shapefile, the fiona-package is used. Every geometry-object of the shapefile is stored in a GeometryCollection from the shapely-package.
 
+The resolution depends on the amount of pixel in each dimension. Because the amount of pixels in one dimension is defined as input in the function, the range is divided by this value to get the resolution.
+Because the x- and y-range may differ, its mean is used in the above calculation.
+
 \subsection{Defining the bounding box}
 We create a buffer around the actual shape of the shapefile which will look prettier in the resulting image. 
+
+\lstinputlisting[language=Python, firstline=114, lastline=135]{../rasterizer_function.py}
 
 \newpage
 % Python environment
