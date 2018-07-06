@@ -93,12 +93,18 @@
 
 
 \begin{abstract}
-	A rasterinzing tool creates a regular grid whithin the bounding box of a geometry collection and assigns a value to each cell depending on the presence of a geometry in that cell region. This information can either be a binary one (no-data / data) or based on the geometry attributes. For this Project, the first cell will create a randomized geometry list containing the input data. The attributes for each of the three geometries are stored in a separated attributes list.
+	
 \end{abstract}
 
 
 \section{Aim of the Project}
-The aim of this project was to create a function that generates a raster-file (.tif). This file displays the geometries from a shapfile, which was given as input to the function. The spatial resolution and name of the output-file can be defined as input to the function.
+The aim of this project was to create a rasterizing tool that generates a raster-file from a given shape-file. The idea of such a rasterizing tool is to load the geometries of a shape-file into a geometry collection, implement a regular grid within the bounding box of this geometry collection and assign a value to each grid cell. For the value assignment it's either possible to use attribute values of the geometry or to use a binary format depending on the presence of a geometry.
+
+\subsubsection*{Approach}
+To approach this task we first of all we developed a script which randomly generates geometries --polygons, points and linestrings-- and saves them as shape files. Those shape files served as test data. 
+
+
+This file displays the geometries from a shapfile, which was given as input to the function. The spatial resolution and name of the output-file can be defined as input to the function.
 For the case that no shapefile is available to run the function, a code to generate random geometries is provided.
 
 
@@ -126,18 +132,18 @@ class MyClass(Yourclass):
 		print bla
 \end{python}
 \subsection{R Code}
-\begin{lstlisting}[language=Python]
-#=============================================================================
-#                       Initial Values
-#=============================================================================
+\begin{python}
+#===================================================
+#                       Function Header
+#====================================================
 def rasterizer(filepath,
-							pixels=100,
-						buffer=10,
-outputname="output.tiff",
-save=True,
-preview=True):
+	pixels=100,
+ 	buffer_value=10,
+ 	outputname="output.tiff",
+ 	save=True,
+  	preview=True):
 
-\end{lstlisting}
+\end{python}
 
 
 \section{Issues}
