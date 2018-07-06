@@ -20,26 +20,29 @@ import os
 
 
 def rasterizer(filepath,
-               pixels=100,
+               pixel=100,
                buffer=10,
-               outputname="output.tiff",
                save=True,
                preview=True):
 
     """rasterizer function
-    This function creates a raster file (.tiff) from a given shape file.
-    To do so the function collects the geometries defines a bounding box
-    around them. Within the bounding box a regular grid is generated and
-    points are created representing the grid cells. Then it is checked if
-    the grid cell/point lies within the given geometry. The boolean result
-    is transformed to a numpy array with a radiometric resolution of 8 bit.
-    This numpy array is then saved as a .tiff file.
+    This function serves as a rasterizing tool and is able to create a TIFF
+    file from a given shape file. The function works according to the
+    following pattern: The geometries of the given shapefile are loaded into a
+    geometry collection. Then the bounding box around this collection is
+    defined with an additional frame. Within this frame a regular grid is
+    generated, as well as point geometries representing each grid cell. With
+    the coordinates of the generated point geometries it is possible to run
+    geometric queries, testing if a positive value should be assigned to the
+    pixel. Regarding the value assignment, the function is using a binary
+    format with a highlighting of ovelapping geometries. Finally the raster
+    can be saved in a 8 Bit format as a TIFF file.
+
     Example usage
     -------------
     rasterizer(filepath="/Users/Documents/test_polygons",
-               pixels=100,
+               pixel=100,
                buffer=10,
-               outputname="polygons_output.tiff",
                save=True,
                preview=True)
     >> The process is running: 100% completed
@@ -48,21 +51,38 @@ def rasterizer(filepath,
     >> The file is successfully saved
     Parameters
     ----------
-    :param filepath: string
-    :param pixels: integer
-    :param buffer: integer
-    :param outputname: string
-    :param preview: boolean
-    :param save: boolean
-    :return preview: plot
+    :param filepath: string, path of the input shapefile
+    :param pixel: integer, determining the resolution
+    :param buffer: integer, determining the number of pixel creating a frame
+                            around the minimum bounding box
+    :param preview: boolean, indicating if a preview should be generated or not
+    :param save: boolean, indicating if the raster should be saved or not
+
+    :return preview: plot, inline
     :return saved .tiff file: message
     """
+
+    # input check
+    if type(filepath) is not str:
+        raise Exception('filepath should be a string with the path of the'
+                        'input shapefile')
+    if type(pixel) is not int:
+        raise Exception('pixel should be a integer determining the resolution')
+    if type(buffer) is not int:
+        raise Exception('buffer should be a integer determining the number '
+                        'of pixel creating a frame around the minimum '
+                        'bounding box')
+    if type(preview) is not bool:
+        raise Exception('preview should be boolean indicating if a preview '
+                        'plot should be generated or not')
+    if type(save) is not bool:
+        raise Exception('save should be boolean indicating if the raster '
+                        'should be saved or not')
 
     # collect geometries of shape file
     geometry_coll = spg.collection.GeometryCollection(
         [shape(pol['geometry']) for pol in fiona.open(filepath)]
     )
-
 
     # cornerstones of bounding box
     bbox = geometry_coll.bounds
@@ -71,7 +91,7 @@ def rasterizer(filepath,
     y_range = abs(round(bbox[3]) - round(bbox[1]))
 
     # defining the resolution depending on mean of x_range and y_range
-    resolution = np.mean((x_range, y_range)) / pixels
+    resolution = np.mean((x_range, y_range)) / pixel
 
     # implemented buffer frame around the geometries
     bbox_plus_buffer = []
@@ -91,17 +111,17 @@ def rasterizer(filepath,
                               x_min:x_max:float(resolution)]
 
     # create a point geometry for every grid cell
-    geom_pixels = []
+    geom_pixel = []
     for i in range(0, len(geom_x[:, 1])):
         for j in range(0, len(geom_y[1, :])):
-            geom_pixels.append(spg.Point([geom_x[i, j], geom_y[i, j]]))
+            geom_pixel.append(spg.Point([geom_x[i, j], geom_y[i, j]]))
 
     # check if the pixel/point lies within one of the geometries (separately)
     within_list = []
     for i in range(0, len(geometry_coll)):
         if isinstance(geometry_coll[i], spg.polygon.Polygon):
-            step = [pixel.within(geometry_coll[i]) for pixel in geom_pixels]
-        if isinstance(geometry_coll[i], spg.point.Point):
+            step = [pixel.within(geometry_coll[i]) for pixel in geom_pixel]
+        elif isinstance(geometry_coll[i], spg.point.Point):
             step = [
                 (
                         (pixel.x > (geometry_coll[i].x - 0.5 * resolution)) &
@@ -110,12 +130,17 @@ def rasterizer(filepath,
                 (
                         (pixel.y > (geometry_coll[i].y - 0.5 * resolution)) &
                         (pixel.y <= (geometry_coll[i].y + 0.5 * resolution))
-                ) for pixel in geom_pixels
+                ) for pixel in geom_pixel
             ]
 
-        if isinstance(geometry_coll[i], spg.linestring.LineString):
+        elif isinstance(geometry_coll[i], spg.linestring.LineString):
             step = [pixel.within(geometry_coll[i].buffer(float(resolution)))
-                    for pixel in geom_pixels]
+                    for pixel in geom_pixel]
+
+        else:
+            raise Exception(
+                'Shapefile geometry must be polygon, point or linestring')
+
         print('The process is running: {}% completed'.format(
             (round(100 * i / len(geometry_coll), 2))))
         within_list.append(step)
@@ -150,6 +175,8 @@ def rasterizer(filepath,
     if save:
         os.chdir(input(
             "Please enter the path where the .tiff file should be saved: "))
+
+        outputname = input('Please enter name for the output file')
 
         # write image data to tiff file
         sk.external.tifffile.imsave(outputname, flipped_array)
