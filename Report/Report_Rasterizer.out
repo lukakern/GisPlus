@@ -1,21 +1,4 @@
 \BOOKMARK [1][-]{section.1}{Aim of the Project}{}% 1
-<<<<<<< HEAD
-\BOOKMARK [1][-]{section.2}{Structure of the function}{}% 2
-\BOOKMARK [2][-]{subsection.2.1}{Load in the shapefile}{section.2}% 3
-\BOOKMARK [2][-]{subsection.2.2}{Defining the bounding box}{section.2}% 4
-\BOOKMARK [1][-]{section.3}{Issues}{}% 5
-\BOOKMARK [2][-]{subsection.3.1}{Solved}{section.3}% 6
-\BOOKMARK [2][-]{subsection.3.2}{Unsolved}{section.3}% 7
-=======
 \BOOKMARK [1][-]{section.2}{Structure of the Function}{}% 2
-\BOOKMARK [2][-]{subsection.2.1}{Load in the Shapefile}{section.2}% 3
-\BOOKMARK [2][-]{subsection.2.2}{Calculate the Resolution}{section.2}% 4
-\BOOKMARK [2][-]{subsection.2.3}{Defining the Bounding Box and create a Grid}{section.2}% 5
-\BOOKMARK [2][-]{subsection.2.4}{Within Query}{section.2}% 6
-\BOOKMARK [2][-]{subsection.2.5}{Writing the result in an array}{section.2}% 7
-\BOOKMARK [2][-]{subsection.2.6}{Set Radiometric Resolution}{section.2}% 8
-\BOOKMARK [2][-]{subsection.2.7}{Flip Array and Save as TIFF}{section.2}% 9
-\BOOKMARK [1][-]{section.3}{Issues}{}% 10
-\BOOKMARK [2][-]{subsection.3.1}{Solved}{section.3}% 11
-\BOOKMARK [2][-]{subsection.3.2}{Unsolved}{section.3}% 12
->>>>>>> fcfa8912f93953506f069acda5ec7e4a17d223fb
+\BOOKMARK [1][-]{section.3}{Result}{}% 3
+\BOOKMARK [1][-]{section.4}{Issues}{}% 4
