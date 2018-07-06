@@ -1,0 +1,12 @@
+\BOOKMARK [1][-]{section.1}{Aim of the Project}{}% 1
+\BOOKMARK [1][-]{section.2}{Structure of the Function}{}% 2
+\BOOKMARK [2][-]{subsection.2.1}{Load in the Shapefile}{section.2}% 3
+\BOOKMARK [2][-]{subsection.2.2}{Calculate the Resolution}{section.2}% 4
+\BOOKMARK [2][-]{subsection.2.3}{Defining the Bounding Box and create a Grid}{section.2}% 5
+\BOOKMARK [2][-]{subsection.2.4}{Within Query}{section.2}% 6
+\BOOKMARK [2][-]{subsection.2.5}{Writing the result in an array}{section.2}% 7
+\BOOKMARK [2][-]{subsection.2.6}{Set Radiometric Resolution}{section.2}% 8
+\BOOKMARK [2][-]{subsection.2.7}{Flip Array and Save as TIFF}{section.2}% 9
+\BOOKMARK [1][-]{section.3}{Issues}{}% 10
+\BOOKMARK [2][-]{subsection.3.1}{Solved}{section.3}% 11
+\BOOKMARK [2][-]{subsection.3.2}{Unsolved}{section.3}% 12
