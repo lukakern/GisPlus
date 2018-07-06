@@ -178,6 +178,11 @@ def rasterizer(filepath,
 
         outputname = input('Please enter name for the output file')
 
+        if outputname[-5:] != '.tiff':
+            raise Exception('Output name not correctly specified. \
+                    The output file should be a .tiff file')
+
+
         # write image data to tiff file
         sk.external.tifffile.imsave(outputname, flipped_array)
         print('The file is successfully saved')
