@@ -1,17 +1,13 @@
 # -*- encoding: utf-8 -*-
 """Summary of script
-
 This script is about the rasterizer function:
-
 The function creates a raster file (.tiff) from a given shape file.
-
 To do so the function collects the geometries defines a bounding box
 around them. Within the bounding box a regular grid is generated and
 points are created representing the grid cells. Then it is checked if
 the grid cell/point lies within the given geometry. The boolean result
 is transformed to a numpy array with a radiometric resolution of 8 bit.
 This numpy array is then saved as a .tiff file.
-
 """
 
 import shapely.geometry as spg
@@ -31,35 +27,25 @@ def rasterizer(filepath,
                preview=True):
 
     """rasterizer function
-
     This function creates a raster file (.tiff) from a given shape file.
-
     To do so the function collects the geometries defines a bounding box
     around them. Within the bounding box a regular grid is generated and
     points are created representing the grid cells. Then it is checked if
     the grid cell/point lies within the given geometry. The boolean result
     is transformed to a numpy array with a radiometric resolution of 8 bit.
     This numpy array is then saved as a .tiff file.
-
     Example usage
     -------------
-
     rasterizer(filepath="/Users/Documents/test_polygons",
                pixels=100,
                buffer=10,
                outputname="polygons_output.tiff",
                save=True,
                preview=True)
-
     >> The process is running: 100% completed
-
     >> Please enter the path to the direction where the .tiff file should be
     saved: /Users/Documents/results
-
     >> The file is successfully saved
-
-
-
     Parameters
     ----------
     :param filepath: string
