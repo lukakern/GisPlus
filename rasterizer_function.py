@@ -87,6 +87,7 @@ def rasterizer(filepath,
     # defining the resolution depending on mean of x_range and y_range
     resolution = np.mean((x_range, y_range)) / pixels
 
+
     # implemented buffer frame around the geometries
     bbox_plus_buffer = []
     [bbox_plus_buffer.append(bbox[i] - float(buffer * resolution))
