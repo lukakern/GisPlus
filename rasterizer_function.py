@@ -174,13 +174,13 @@ def rasterizer(filepath,
 
     if save:
         os.chdir(input(
-            "Please enter the path where the .tiff file should be saved: "))
+            'Please enter the path where the .tiff file should be saved: '))
 
         outputname = input('Please enter name for the output file')
 
         if outputname[-5:] != '.tiff':
-            raise Exception('Output name not correctly specified. \
-                    The output file should be a .tiff file')
+            raise Exception('Output name not correctly specified. The output '
+                            'file should be a .tiff file')
 
 
         # write image data to tiff file
