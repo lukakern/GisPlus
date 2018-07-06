@@ -17,7 +17,7 @@ geometry_coll_poly = spg.collection.GeometryCollection(
     [spg.MultiPoint(
         [spg.Point(_) for _ in np.random.gamma(mid, 3, (15, 2))]
     ).convex_hull for mid in (
-         [np.random.randint(0, 100) for i in range(0, 3)])]
+         [np.random.randint(0, 50) for i in range(0, 3)])]
 )
 
 '''
@@ -26,7 +26,7 @@ Test Points
 geometry_coll_point = spg.collection.GeometryCollection(
     [spg.MultiPoint(
         [spg.Point(_) for _ in np.random.gamma(mid, 3, (15, 2))]
-    ) for mid in ([np.random.randint(0, 100) for i in range(0, 3)])])
+    ) for mid in ([np.random.randint(0, 50) for i in range(0, 3)])])
 
 geometry_coll_point = \
     spg.collection.GeometryCollection([geometry_coll_point[0][i]
@@ -36,10 +36,15 @@ geometry_coll_point = \
 '''
 Test LineString
 '''
-geometry_coll_line = spg.collection.GeometryCollection(
-    [spg.LineString([(20, 69), (1, 3)]),
-     spg.LineString([(44, 60), (2, 99)]),
-     spg.LineString([(45, 12), (113, 44)])])
+line_coords = [np.random.randint(0,90) for i in range(0,12)]
+geometry_coll_line = spg.collection.GeometryCollection([spg.LineString([(line_coords[0], line_coords[1]),
+                                                                        (line_coords[2], line_coords[3])]),
+                                                        spg.LineString([(line_coords[4], line_coords[5]),
+                                                                        (line_coords[6], line_coords[7])]),
+                                                        spg.LineString([(line_coords[8], line_coords[9]),
+                                                                        (line_coords[10], line_coords[11])])])
+
+
 
 
 
